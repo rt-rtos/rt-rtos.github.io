@@ -46,7 +46,7 @@ function TopBar({ now }) {
       <div className="right">
         <span className="status">
           <span className="dot" aria-hidden="true"></span>
-          <span>available · jun 2026</span>
+          <span>available · Aug - 2026</span>
         </span>
         <span style={{ color: "var(--ink-3)" }}>{now}</span>
       </div>
