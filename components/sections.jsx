@@ -598,11 +598,11 @@ function Contact() {
             </a>
             <a className="contact-link" href="#" onClick={(e) => e.preventDefault()}>
               <span className="k">linkedin</span>
-              <span className="v">/in/rasmus-tikkanen ↗</span>
+              <span className="v">*coming soon*/in/rasmus-tikkanen ↗</span>
             </a>
             <a className="contact-link" href="#" onClick={(e) => e.preventDefault()}>
               <span className="k">cv</span>
-              <span className="v">tikkanen-cv-2026.pdf ↗</span>
+              <span className="v">*coming soon*tikkanen-cv-2026.pdf ↗</span>
             </a>
           </div>
         </Reveal>
