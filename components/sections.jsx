@@ -181,7 +181,7 @@ const PROJECTS = [
     title: "S3-Amysynth",
     desc:
       "A custom handheld synthesizer and drum sequencer built on the ESP32-S3 using ESP-IDF 6.0 and FreeRTOS. Runs the open-source AMY synthesis engine for real-time audio generation, drives a 16-step editable drum sequencer, and streams 48 kHz stereo audio over USB Audio Class 2.0 via TinyUSB. Controlled through a rotary encoder and push buttons with an SSD1306 OLED for sequencer state and UI feedback. Hardware path also includes a PCM5102 I2S DAC for standalone output.",
-    year: "2025",
+    year: "2026",
     lang: "C",
     langColor: "oklch(0.55 0.12 250)",
     tags: ["ESP32-S3", "Audio", "AMY", "FreeRTOS", "I2S", "USB-Audio", "Sequencer"],
@@ -193,7 +193,7 @@ const PROJECTS = [
     title: "snake-game",
     desc:
       "Snake in the terminal, written in C against PDcurses on Windows and Ncurses on Linux. A small project to get more comfortable with C, static compilation, and the curses event loop.",
-    year: "2024",
+    year: "2025",
     lang: "C",
     langColor: "oklch(0.55 0.12 250)",
     tags: ["C", "ncurses", "PDcurses", "TUI"],
@@ -530,7 +530,7 @@ const EXP = [
     desc: "Coursework in embedded C/C++, real-time systems, sensor networks, basic signal processing and electronics.",
   },
   {
-    when: "Summer 2025",
+    when: "Summer 2026",
     role: "Internship — placeholder",
     place: "",
     desc: "",
