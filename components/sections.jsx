@@ -195,6 +195,10 @@ const PROJECTS = [
     tags: ["ESP32-S3", "DSP", "FFT", "I2S", "matplotlib"],
     href: "https://github.com/rt-rtos/S3-FFT-Matplot",
     schema: "fft",
+    images: [
+      { src: "assets/FFTPlots.png",       alt: "matplotlib output — time domain (top) and frequency spectrum (bottom)" },
+      { src: "assets/FFTSquareWave.png",  alt: "square wave capture — aliasing visible at harmonic rolloff" },
+    ],
   },
   {
     num: "003",
@@ -426,6 +430,24 @@ function ProjectSchema({ kind }) {
   );
 }
 
+function ProjectImageGallery({ images }) {
+  const [idx, setIdx] = useState(0);
+  const prev = (e) => { e.stopPropagation(); setIdx((i) => (i - 1 + images.length) % images.length); };
+  const next = (e) => { e.stopPropagation(); setIdx((i) => (i + 1) % images.length); };
+  const img = images[idx];
+  return (
+    <div className="proj-gallery">
+      <img src={img.src} alt={img.alt} className="project-schema-img" />
+      <div className="proj-gallery-bar">
+        <button className="proj-gallery-btn" onClick={prev} aria-label="Previous image">&#8592;</button>
+        <span className="proj-gallery-counter">{idx + 1}&thinsp;/&thinsp;{images.length}</span>
+        <button className="proj-gallery-btn" onClick={next} aria-label="Next image">&#8594;</button>
+        <span className="project-schema-img-label proj-gallery-caption">{img.alt}</span>
+      </div>
+    </div>
+  );
+}
+
 function Project({ p, idx, open, onToggle }) {
   return (
     <article
@@ -473,9 +495,12 @@ function Project({ p, idx, open, onToggle }) {
           <span>{p.lang}</span>
         </div>
       </div>
-      <div className="project-schema">
+      <div className="project-schema" data-image={!!(p.images && p.images.length)}>
         <div className="project-schema-inner">
-          <ProjectSchema kind={p.schema} />
+          {p.images && p.images.length
+            ? <ProjectImageGallery images={p.images} />
+            : <ProjectSchema kind={p.schema} />
+          }
         </div>
       </div>
     </article>

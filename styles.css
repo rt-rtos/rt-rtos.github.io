@@ -541,6 +541,15 @@ body[data-texture="paper"]::before {
 .project[data-open="true"] .project-schema {
   height: 220px;
 }
+.project-schema[data-image="true"] {
+  height: auto;
+  max-height: 0;
+  transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.project[data-open="true"] .project-schema[data-image="true"] {
+  height: auto;
+  max-height: 800px;
+}
 .project-schema-inner {
   height: 220px;
   margin-top: 16px;
@@ -552,10 +561,87 @@ body[data-texture="paper"]::before {
   align-items: center;
   justify-content: center;
 }
+.project-schema[data-image="true"] .project-schema-inner {
+  height: auto;
+}
 .project-schema-inner svg {
   width: 100%;
   height: 100%;
   color: var(--ink-2);
+}
+.project-schema-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0.88;
+  filter: saturate(0.7);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+.project-schema-inner:hover .project-schema-img {
+  opacity: 1;
+  filter: saturate(1);
+}
+.project-schema-img-label {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  background: var(--paper-2);
+  padding: 2px 6px;
+  border: 1px solid var(--rule);
+}
+.proj-gallery {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.proj-gallery-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-top: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+.proj-gallery-btn {
+  background: none;
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s;
+  padding: 0;
+}
+.proj-gallery-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.proj-gallery-counter {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  min-width: 28px;
+  text-align: center;
+}
+.proj-gallery-caption {
+  position: static;
+  background: none;
+  border: none;
+  padding: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ============== Writing ============== */
