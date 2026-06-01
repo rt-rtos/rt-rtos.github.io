@@ -78,6 +78,18 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
         </h1>
       </Reveal>
 
+      <Reveal delay={100}>
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(13px, 1.1vw, 16px)", color: "var(--ink-3)", margin: "12px 0 0", letterSpacing: "0.04em" }}>
+          
+        </p>
+      </Reveal>
+
+      <Reveal delay={180}>
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(11px, 0.95vw, 13px)", color: "var(--accent)", margin: "10px 0 0", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+          &#9656;&nbsp; Seeking LIA internship · Autumn 2026
+        </p>
+      </Reveal>
+
       <div className="hero-sub">
         <Reveal delay={150} className="lede" as="p">
           {lede}
@@ -88,6 +100,14 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
             <div className="row"><span className="k">studying</span><span className="v">IoT &amp; Embedded Dev · Jensen YH </span></div>
             <div className="row"><span className="k">stack</span><span className="v">C / C++ · RTOS · ESP-IDF · Python </span></div>
             <div className="row"><span className="k">interests</span><span className="v">HW ⇄ SW | analog ⇄ digital</span></div>
+            <div className="row">
+              <span className="k">contact</span>
+              <span className="v">
+                <a href="mailto:rasmus.tikkanen95@gmail.com" style={{ color: "inherit", textDecoration: "none" }}>rasmus.tikkanen95@gmail.com</a>
+                {" · "}
+                <a href="https://www.linkedin.com/in/rasmus-tikkanen-7803763a5" target="_blank" rel="noreferrer" style={{ color: "inherit", textDecoration: "none" }}>LinkedIn ↗</a>
+              </span>
+            </div>
           </div>
         </Reveal>
       </div>
@@ -620,13 +640,13 @@ function Contact() {
               <span className="k">github</span>
               <span className="v">@rt-rtos ↗</span>
             </a>
-            <a className="contact-link" href="#" onClick={(e) => e.preventDefault()}>
+            <a className="contact-link" href="https://www.linkedin.com/in/rasmus-tikkanen-7803763a5" target="_blank" rel="noreferrer">
               <span className="k">linkedin</span>
-              <span className="v">*coming soon*/in/rasmus-tikkanen ↗</span>
+              <span className="v">Rasmus Tikkanen ↗</span>
             </a>
             <a className="contact-link" href="#" onClick={(e) => e.preventDefault()}>
               <span className="k">cv</span>
-              <span className="v">*coming soon*tikkanen-cv-2026.pdf ↗</span>
+              <span className="v">Provided On Request</span>
             </a>
           </div>
         </Reveal>
