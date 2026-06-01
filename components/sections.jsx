@@ -496,9 +496,8 @@ function Projects() {
             <p style={{ fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--ink-2)", maxWidth: "60ch", margin: "0 0 32px", textWrap: "pretty" }}>
               A few things I&rsquo;ve been working on while learning. Click for details and link. 
             </p>
-            <p></p>
-            <p style={{ fontSize: "clamp(12px, 1.5vw, 22px)", color: "var(--ink-3)", maxWidth: "60ch", margin: "0 0 32px", textWrap: "pretty" }}>
-             More detailed documentation is found in the repositories themselves.
+             <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--ink-3)", letterSpacing: "0.04em", margin: "0 0 32px" }}>
+              More detailed documentation is found in the repositories themselves.
             </p>
           </Reveal>
           <div className="projects">
@@ -603,9 +602,10 @@ function Writing() {
         </div>
         <div>
           <Reveal>
-            <p style={{ fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--ink-2)", maxWidth: "60ch", margin: "0 0 32px", textWrap: "pretty" }}>
+            <p style={{ fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--ink-2)", maxWidth: "60ch", margin: "0 0 8px", textWrap: "pretty" }}>
              Short writings and project postmortems from time to time, as I learn new things and want to share them.
             </p>
+           
           </Reveal>
           <div className="writing-list">
             {WRITING.map((w, i) => (
@@ -619,7 +619,10 @@ function Writing() {
                   onKeyDown={(e) => { if (w.body && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setOpenIdx(openIdx === i ? null : i); } }}
                 >
                   <div className="write-date">{w.date}</div>
-                  <div className="write-title">{w.title}<span className="arr">{w.body ? (openIdx === i ? " ↑" : " ↓") : " ↗"}</span></div>
+                  <div className="write-title-col">
+                    <div className="write-title">{w.title}<span className="arr">{w.body ? (openIdx === i ? " ↑" : " ↓") : " ↗"}</span></div>
+                    {w.body && openIdx !== i && (() => { const first = w.body.find(b => b.t === 'p'); return first ? <p className="write-preview">{first.text}</p> : null; })()}
+                  </div>
                   <div className="write-tag">{w.tag}</div>
                 </div>
                 {w.body && openIdx === i && (
