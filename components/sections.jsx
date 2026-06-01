@@ -494,8 +494,11 @@ function Projects() {
         <div>
           <Reveal>
             <p style={{ fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--ink-2)", maxWidth: "60ch", margin: "0 0 32px", textWrap: "pretty" }}>
-              A few things I&rsquo;ve been working on while learning. Click
-              any row to see a rough sketch of how it&rsquo;s wired up.
+              A few things I&rsquo;ve been working on while learning. Click for details and link. 
+            </p>
+            <p></p>
+            <p style={{ fontSize: "clamp(12px, 1.5vw, 22px)", color: "var(--ink-3)", maxWidth: "60ch", margin: "0 0 32px", textWrap: "pretty" }}>
+             More detailed documentation is found in the repositories themselves.
             </p>
           </Reveal>
           <div className="projects">
