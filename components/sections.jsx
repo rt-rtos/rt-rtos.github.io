@@ -407,8 +407,16 @@ function Project({ p, idx, open, onToggle }) {
       <div className="project-num">/{p.num}</div>
       <div>
         <div className="project-title">
-          {p.title}
-          <span className="arrow" aria-hidden="true">↗</span>
+          <a
+            href={p.href}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            {p.title}
+            <span className="arrow" aria-hidden="true">↗</span>
+          </a>
         </div>
         <div className="project-tags">
           {p.tags.map((t) => (<span key={t} className="project-tag">{t}</span>))}
@@ -417,7 +425,17 @@ function Project({ p, idx, open, onToggle }) {
       <div className="project-desc">{p.desc}</div>
       <div className="project-meta">
         <div>year &nbsp;·&nbsp; {p.year}</div>
-        <div>repo &nbsp;·&nbsp; rt-rtos/{p.title.toLowerCase()}</div>
+        <div>
+          <a
+            href={p.href}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            repo &nbsp;·&nbsp; rt-rtos/{p.title.toLowerCase()} ↗
+          </a>
+        </div>
         <div className="project-lang-bar">
           <span className="project-lang-dot" style={{ background: p.langColor }}></span>
           <span>{p.lang}</span>
@@ -524,16 +542,22 @@ function Writing() {
 /* ====== Experience ====== */
 const EXP = [
   {
+    when: "Autumn 2026",
+    role: "LIA Internship — Seeking Position",
+    place: "Stockholm, Sweden",
+    desc: "Looking for an embedded or hardware-adjacent team where I can contribute from day one. I work comfortably across the stack — from schematic and simulation through firmware and debugging. I'm self-driven, used to learning fast from documentation and datasheets, and I care about building things that actually work reliably.",
+  },
+  {
     when: "2025 — now",
     role: "Studying IoT & Embedded Development at Jensen Yrkeshögskola.",
     place: "Stockholm, Sweden",
     desc: "Coursework in embedded C/C++, real-time systems, sensor networks, basic signal processing and electronics.",
   },
   {
-    when: "Summer 2025",
-    role: "Internship — placeholder",
-    place: "",
-    desc: "",
+    when: "2023 — 2026",
+    role: "Analog Circuit Design / Simulation",
+    place: "Home lab",
+    desc: "Designing and simulating analog circuits — op-amp stages, filters, oscillators and power supply topologies. Using LTspice and KiCad for schematic capture and SPICE simulation, developing intuition for signal integrity, noise and component behaviour.",
   },
   {
     when: "2021 — 2024",
