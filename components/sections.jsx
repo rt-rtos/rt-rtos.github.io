@@ -210,6 +210,18 @@ const PROJECTS = [
   },
   {
     num: "004",
+    title: "Grupparbete-IoT25S",
+    desc:
+      "A group project alarm clock on the ESP32-C3. The web UI is compiled directly into the firmware image as a linked binary blob — no SD card, no SPIFFS partition, no host dependency. The device serves its own interface over WiFi straight from flash, keeping the footprint minimal and the setup genuinely self-contained. NTP sync for time, configurable alarms, and a clean browser UI served from ~20 KB of embedded static assets.",
+    year: "2025",
+    lang: "C",
+    langColor: "oklch(0.55 0.12 250)",
+    tags: ["ESP32-C3", "ESP-IDF", "NTP", "WebUI", "WiFi", "Embedded Web"],
+    href: "https://github.com/rt-rtos/Grupparbete-IoT25S",
+    schema: "snake",
+  },
+  {
+    num: "005",
     title: "snake-game",
     desc:
       "Snake in the terminal, written in C against PDcurses on Windows and Ncurses on Linux. A small project to get more comfortable with C, static compilation, and the curses event loop.",
@@ -521,14 +533,64 @@ function Projects() {
 
 /* ====== Writing ====== */
 const WRITING = [
-  { date: "2025.11", title: "Trying to fit a small webserver on an ESP32", tag: "ESP32" },
-  { date: "2025.09", title: "What I keep getting wrong about FreeRTOS priorities", tag: "RTOS" },
-  { date: "2025.06", title: "Reading a microphone with I2S on the ESP32-S3", tag: "DSP" },
-  { date: "2025.03", title: "A weekend of trying to hand-solder 0402 parts", tag: "Hardware" },
-  { date: "2024.12", title: "Notes on getting an interrupt to actually fire", tag: "Notes" },
+  {
+    date: "2026.05",
+    title: "Fixing a NAD 3020i: chasing DC offset on the outputs",
+    tag: "Repair",
+    body: [
+      { t: "p", text: "The NAD 3020i is a late-70s integrated amplifier with something of a cult following — modest power figures on paper, but widely regarded as one of the better-sounding budget amplifiers of its era. This one had both fuses blown and a full negative-rail DC offset sitting on the speaker outputs." },
+      { t: "p", text: "" },
+      { t: "imgs", items: [
+        { src: "assets/NadTopView.jpg", caption: "Internals mid-repair" },
+        { src: "assets/NadOutputMods.jpg", caption: "PCB underside — base stoppers and added emitter resistors" },
+        { src: "assets/Nad30201.jpg", caption: "The finished amp" },
+      ]},
+      { t: "p", text: "The actual culprits after replacing the failed output transistors were R437 and R438 — the Emitter/Collector resistor for the VAS-stage Sziklai pair Q405-408 — both open circuit. This disconnects the VAS transistors from the positive rail. The output stage being unregulated runs away in a feedback loop. slamming into the negative rail. A cracked star-ground point under a PCB mounting screw compounded things further." },
+      { t: "list", items: [
+        "Replaced R437 + R438 and Q400 output transistors",
+        "Added base stopper resistors — trace cut, bridged with resistors for HF stability",
+        "Added external emitter resistance at the output devices to compensate for epitaxial replacement transistors",
+        "Replaced aging electrolytic and ceramic decoupling caps with film types",
+        "New bulk filter capacitors",
+        "Repaired the cracked star-ground trace",
+        "Added heatsinks to Q507/Q508, which were running close to their maximum rated temperature to increase lifespan",
+        "Full solder reflow, bias + DC offset calibration, stability and stress testing",
+      ]},
+      { t: "p", text: "The amp is from 1979 and sounds exactly like it should. Let´s hope for at least another 50 years of life" },
+    ],
+  },
+
+
 ];
 
+function PostContent({ blocks }) {
+  return (
+    <div className="post-content">
+      {blocks.map((b, i) => {
+        if (b.t === "p") return <p key={i} className="post-p">{b.text}</p>;
+        if (b.t === "imgs") return (
+          <div key={i} className="post-imgs">
+            {b.items.map((img, j) => (
+              <figure key={j} className="post-figure">
+                <img src={img.src} alt={img.caption} className="post-img" loading="lazy" />
+                <figcaption className="post-caption">{img.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        );
+        if (b.t === "list") return (
+          <ul key={i} className="post-list">
+            {b.items.map((item, j) => <li key={j}>{item}</li>)}
+          </ul>
+        );
+        return null;
+      })}
+    </div>
+  );
+}
+
 function Writing() {
+  const [openIdx, setOpenIdx] = useState(null);
   return (
     <section className="section container" id="writing">
       <div className="section-grid">
@@ -539,18 +601,29 @@ function Writing() {
         <div>
           <Reveal>
             <p style={{ fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--ink-2)", maxWidth: "60ch", margin: "0 0 32px", textWrap: "pretty" }}>
-              Short notes I write while figuring things out, mostly so
-              I can find the answer again later.
+             Short writings and project postmortems from time to time, as I learn new things and want to share them.
             </p>
           </Reveal>
           <div className="writing-list">
             {WRITING.map((w, i) => (
               <Reveal key={w.title} delay={i * 60}>
-                <a className="write-item" href="#" onClick={(e) => e.preventDefault()}>
+                <div
+                  className="write-item"
+                  data-open={openIdx === i}
+                  role={w.body ? "button" : undefined}
+                  tabIndex={w.body ? 0 : undefined}
+                  onClick={() => w.body && setOpenIdx(openIdx === i ? null : i)}
+                  onKeyDown={(e) => { if (w.body && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setOpenIdx(openIdx === i ? null : i); } }}
+                >
                   <div className="write-date">{w.date}</div>
-                  <div className="write-title">{w.title}<span className="arr">↗</span></div>
+                  <div className="write-title">{w.title}<span className="arr">{w.body ? (openIdx === i ? " ↑" : " ↓") : " ↗"}</span></div>
                   <div className="write-tag">{w.tag}</div>
-                </a>
+                </div>
+                {w.body && openIdx === i && (
+                  <div className="write-body">
+                    <PostContent blocks={w.body} />
+                  </div>
+                )}
               </Reveal>
             ))}
           </div>

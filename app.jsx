@@ -16,7 +16,7 @@ const SITE_DEFAULTS = {
 function App() {
   const [now, setNow] = useState("");
 
-  const SHOW_WRITING = false; // flip to true later
+  const SHOW_WRITING = true;
 
   useEffect(() => {
     const applyTheme = (themeVal) => {
