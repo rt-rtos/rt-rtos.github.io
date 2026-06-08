@@ -228,6 +228,12 @@ const PROJECTS = [
     tags: ["ESP32-C3", "ESP-IDF", "NTP", "WebUI", "WiFi", "Embedded Web"],
     href: "https://github.com/rt-rtos/Grupparbete-IoT25S",
     schema: "snake",
+    thumbnail: "assets/alarm/Provision.jpg",
+    images: [
+      { src: "assets/alarm/alarm.png",       alt: "Web UI — alarm dashboard served directly from flash" },
+      { src: "assets/alarm/Provisioned.jpg", alt: "OLED showing time and IP after WiFi provisioning" },
+      { src: "assets/alarm/Provision.jpg",   alt: "OLED WiFi provisioning screen — SSID and password" },
+    ],
   },
   {
     num: "005",
