@@ -195,6 +195,7 @@ const PROJECTS = [
     tags: ["ESP32-S3", "DSP", "FFT", "I2S", "matplotlib"],
     href: "https://github.com/rt-rtos/S3-FFT-Matplot",
     schema: "fft",
+    thumbnail: "assets/FFTPlots.png",
     images: [
       { src: "assets/FFTPlots.png",       alt: "matplotlib output — time domain (top) and frequency spectrum (bottom)" },
       { src: "assets/FFTSquareWave.png",  alt: "square wave capture — aliasing visible at harmonic rolloff" },
@@ -211,6 +212,10 @@ const PROJECTS = [
     tags: ["ESP32-S3", "Audio", "AMY", "FreeRTOS", "I2S", "USB-Audio", "Sequencer"],
     href: "https://github.com/rt-rtos/S3-Amysynth",
     schema: "amysynth",
+    thumbnail: "assets/Amysynth/1.jpg",
+    images: [
+      { src: "assets/Amysynth/1.jpg", alt: "Amysynth — hardware prototype running the drum sequencer on perfboard" },
+    ],
   },
   {
     num: "004",
@@ -436,7 +441,7 @@ function ProjectImageGallery({ images }) {
   const next = (e) => { e.stopPropagation(); setIdx((i) => (i + 1) % images.length); };
   const img = images[idx];
   return (
-    <div className="proj-gallery">
+    <div className="proj-gallery" onClick={(e) => e.stopPropagation()}>
       <img src={img.src} alt={img.alt} className="project-schema-img" />
       <div className="proj-gallery-bar">
         <button className="proj-gallery-btn" onClick={prev} aria-label="Previous image">&#8592;</button>
@@ -475,6 +480,9 @@ function Project({ p, idx, open, onToggle }) {
         <div className="project-tags">
           {p.tags.map((t) => (<span key={t} className="project-tag">{t}</span>))}
         </div>
+        {p.thumbnail && !open && (
+          <img src={p.thumbnail} alt={p.title} className="project-thumb" />
+        )}
       </div>
       <div className="project-desc">{p.desc}</div>
       <div className="project-meta">

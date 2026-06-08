@@ -563,6 +563,7 @@ body[data-texture="paper"]::before {
 }
 .project-schema[data-image="true"] .project-schema-inner {
   height: auto;
+  overflow: visible;
 }
 .project-schema-inner svg {
   width: 100%;
@@ -571,6 +572,8 @@ body[data-texture="paper"]::before {
 }
 .project-schema-img {
   width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
   height: auto;
   display: block;
   opacity: 0.88;
@@ -605,6 +608,14 @@ body[data-texture="paper"]::before {
   padding: 8px 10px;
   border-top: 1px solid var(--rule);
   background: var(--paper-2);
+  position: relative;
+  z-index: 1;
+}
+.proj-gallery-bar .project-schema-img-label {
+  position: static;
+  background: none;
+  border: none;
+  padding: 0;
 }
 .proj-gallery-btn {
   background: none;
@@ -642,6 +653,21 @@ body[data-texture="paper"]::before {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.project-thumb {
+  display: block;
+  margin-top: 12px;
+  width: 100%;
+  max-width: 160px;
+  height: auto;
+  border: 1px solid var(--rule);
+  opacity: 0.72;
+  filter: saturate(0.55);
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+.project:hover .project-thumb {
+  opacity: 0.9;
+  filter: saturate(0.8);
 }
 
 /* ============== Writing ============== */
