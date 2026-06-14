@@ -281,19 +281,230 @@ body[data-texture="paper"]::before {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(24px, 4vw, 80px);
-  align-items: end;
+  align-items: start;
 }
 @media (max-width: 720px) {
   .hero-sub { grid-template-columns: 1fr; gap: 32px; }
 }
+.hero-intro {
+  display: flex;
+  flex-direction: column;
+}
 .hero-sub .lede {
+  margin: 0;
   font-size: clamp(18px, 1.6vw, 22px);
   line-height: 1.4;
   color: var(--ink-2);
   max-width: 38ch;
   text-wrap: pretty;
 }
-.hero-sub .stack {
+.hero-project-note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.95vw, 13px);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+  max-width: 56ch;
+}
+.hero-video-wrap {
+  min-width: 0;
+}
+.hero-video-wrapper {
+  position: relative;
+}
+.hero-video-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 22px 12px 10px;
+  background: linear-gradient(to top, oklch(0.08 0.01 240 / 0.82) 0%, transparent 100%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: oklch(0.88 0.01 80 / 0.9);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.hero-video-overlay-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.hero-video-frame {
+  margin: 0;
+  border: 1px solid var(--rule);
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--paper-2) 72%, var(--accent) 28%), var(--paper-2));
+  padding: 10px;
+  overflow: hidden;
+}
+.hero-video-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -10px -10px 10px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+.hero-video-bar-dots {
+  display: flex;
+  gap: 4px;
+}
+.hero-video-bar-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+.hero-video-bar-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+.hero-video {
+  width: 100%;
+  display: block;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+.hero-video-caption {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.hero-video-controls {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.hero-video-audio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  padding: 6px 10px;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.hero-video-audio:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.hero-video-volume {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--rule);
+  padding: 6px 10px;
+  min-height: 32px;
+}
+.hero-video-volume span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.hero-video-volume input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 120px;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--rule) 78%, var(--paper));
+  outline: none;
+}
+.hero-video-volume input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--accent) 70%, var(--ink));
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 24%, transparent);
+  cursor: pointer;
+}
+.hero-video-volume input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--rule) 78%, var(--paper));
+}
+.hero-video-volume input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 1px solid color-mix(in oklab, var(--accent) 70%, var(--ink));
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 24%, transparent);
+  cursor: pointer;
+}
+.hero-video-volume[data-muted="true"] input[type="range"]::-webkit-slider-thumb {
+  background: var(--ink-3);
+  border-color: var(--ink-3);
+  box-shadow: none;
+}
+.hero-video-volume[data-muted="true"] input[type="range"]::-moz-range-thumb {
+  background: var(--ink-3);
+  border-color: var(--ink-3);
+  box-shadow: none;
+}
+.hero-video-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  padding: 6px 10px;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.hero-video-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .hero-video-controls {
+    gap: 6px;
+  }
+  .hero-video-volume {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+  .hero-video-volume input[type="range"] {
+    width: min(58vw, 190px);
+  }
+}
+.hero-sub .stack,
+.hero-stack {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--ink-3);
@@ -301,19 +512,35 @@ body[data-texture="paper"]::before {
   flex-direction: column;
   gap: 4px;
 }
-.hero-sub .stack .row {
+.hero-stack {
+  margin-top: 30px;
+  max-width: 760px;
+}
+.hero-sub .stack .row,
+.hero-stack .row {
   display: grid;
   grid-template-columns: 80px 1fr;
   gap: 12px;
   border-top: 1px dashed var(--rule);
   padding: 8px 0;
 }
-.hero-sub .stack .k {
+.hero-sub .stack .k,
+.hero-stack .k {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-3);
 }
-.hero-sub .stack .v { color: var(--ink); }
+.hero-sub .stack .v,
+.hero-stack .v { color: var(--ink); }
+
+@media (max-width: 720px) {
+  .hero-video {
+    aspect-ratio: 16 / 10;
+  }
+  .hero-stack {
+    margin-top: 22px;
+  }
+}
 
 .hero-rule {
   display: flex;

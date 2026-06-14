@@ -57,11 +57,36 @@ function TopBar({ now }) {
 /* ====== Hero ====== */
 function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
   const [seq, setSeq] = useState(0);
+  const [isMuted, setIsMuted] = useState(true);
+  const [volume, setVolume] = useState(0.72);
+  const videoRef = useRef(null);
   useEffect(() => {
     const id = setInterval(() => setSeq((s) => (s + 1) % 4096), 1100);
     return () => clearInterval(id);
   }, []);
   const seqHex = seq.toString(16).toUpperCase().padStart(3, "0");
+
+  const handleToggleMute = () => {
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = nextMuted;
+      if (!nextMuted) {
+        videoRef.current.volume = volume;
+      }
+    }
+  };
+
+  const handleVolumeChange = (e) => {
+    const nextVolume = Number(e.target.value) / 100;
+    setVolume(nextVolume);
+    if (videoRef.current) {
+      videoRef.current.volume = nextVolume;
+      const shouldMute = nextVolume === 0;
+      videoRef.current.muted = shouldMute;
+      setIsMuted(shouldMute);
+    }
+  };
 
   return (
     <section className="hero container" id="top">
@@ -78,12 +103,6 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
         </h1>
       </Reveal>
 
-      <Reveal delay={100}>
-        <p style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(13px, 1.1vw, 16px)", color: "var(--ink-3)", margin: "12px 0 0", letterSpacing: "0.04em" }}>
-          
-        </p>
-      </Reveal>
-
       <Reveal delay={180}>
         <p style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(11px, 0.95vw, 13px)", color: "var(--accent)", margin: "10px 0 0", letterSpacing: "0.06em", textTransform: "uppercase" }}>
           &#9656;&nbsp; Seeking LIA internship · Autumn 2026
@@ -91,26 +110,97 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
       </Reveal>
 
       <div className="hero-sub">
-        <Reveal delay={150} className="lede" as="p">
-          {lede}
+        <Reveal delay={150} className="hero-intro">
+          <p className="lede">{lede}</p>
         </Reveal>
-        <Reveal delay={300}>
-          <div className="stack">
-            <div className="row"><span className="k">role</span><span className="v">Embedded Developer</span></div>
-            <div className="row"><span className="k">studying</span><span className="v">IoT &amp; Embedded Dev · Jensen YH </span></div>
-            <div className="row"><span className="k">stack</span><span className="v">C / C++ · RTOS · ESP-IDF · Python </span></div>
-            <div className="row"><span className="k">interests</span><span className="v">HW ⇄ SW | analog ⇄ digital</span></div>
-            <div className="row">
-              <span className="k">contact</span>
-              <span className="v">
-                <a href="mailto:rasmus.tikkanen95@gmail.com" style={{ color: "inherit", textDecoration: "none" }}>rasmus.tikkanen95@gmail.com</a>
-                {" · "}
-                <a href="https://www.linkedin.com/in/rasmus-tikkanen-7803763a5" target="_blank" rel="noreferrer" style={{ color: "inherit", textDecoration: "none" }}>LinkedIn ↗</a>
-              </span>
+        <Reveal delay={300} className="hero-video-wrap">
+          <figure className="hero-video-frame">
+            <div className="hero-video-bar" aria-hidden="true">
+              <span className="hero-video-bar-dots"><span></span><span></span><span></span></span>
+              <span className="hero-video-bar-label">amybox.mp4</span>
             </div>
-          </div>
+            <div className="hero-video-wrapper">
+              <video
+                ref={videoRef}
+                className="hero-video"
+                autoPlay
+                muted={isMuted}
+                loop
+                playsInline
+                preload="metadata"
+                poster="assets/Amysynth/1.jpg"
+                aria-label="S3-Amysynth handheld synthesizer demo video"
+              >
+                <source src="assets/amybox (2).mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="hero-video-overlay" aria-hidden="true">
+                <span className="hero-video-overlay-dot"></span>
+                Now playing — S3-Amysynth · ESP32-S3 · FreeRTOS · AMY engine · 48 kHz stereo · USB Audio 2.0
+              </div>
+            </div>
+            <figcaption className="hero-video-caption">S3-Amysynth · ESP32-S3 · groovebox · real-time synthesis</figcaption>
+            <div className="hero-video-controls">
+              <button type="button" className="hero-video-audio" onClick={handleToggleMute}>
+                {isMuted ? (
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                    <path d="M1 4.5v3h2l3 2.5V2L3 4.5H1z" fill="currentColor" stroke="none"/>
+                    <line x1="8.5" y1="4" x2="11" y2="7.5"/>
+                    <line x1="11" y1="4" x2="8.5" y2="7.5"/>
+                  </svg>
+                ) : (
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
+                    <path d="M1 4.5v3h2l3 2.5V2L3 4.5H1z" fill="currentColor" stroke="none"/>
+                    <path d="M8 4a2.5 2.5 0 0 1 0 4" strokeLinecap="round"/>
+                    <path d="M9.5 2.5a5 5 0 0 1 0 7" strokeLinecap="round"/>
+                  </svg>
+                )}
+                {isMuted ? "Sound off" : "Sound on"}
+              </button>
+              <label className="hero-video-volume" htmlFor="hero-volume" data-muted={isMuted}>
+                <span>Vol</span>
+                <input
+                  id="hero-volume"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={Math.round(volume * 100)}
+                  onChange={handleVolumeChange}
+                  aria-label="Video volume"
+                  style={{ background: `linear-gradient(to right, ${isMuted ? "var(--ink-3)" : "var(--accent)"} ${Math.round(volume * 100)}%, color-mix(in oklab, var(--rule) 78%, var(--paper)) ${Math.round(volume * 100)}%)` }}
+                />
+              </label>
+              <a
+                className="hero-video-link"
+                href="https://github.com/rt-rtos/S3-Amysynth"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Open S3-Amysynth repository on GitHub"
+              >
+                View repo ↗
+              </a>
+            </div>
+          </figure>
         </Reveal>
       </div>
+
+      <Reveal delay={360}>
+        <div className="stack hero-stack">
+          <div className="row"><span className="k">role</span><span className="v">Embedded Developer</span></div>
+          <div className="row"><span className="k">studying</span><span className="v">IoT &amp; Embedded Dev · Jensen YH </span></div>
+          <div className="row"><span className="k">stack</span><span className="v">C / C++ · RTOS · ESP-IDF · Python </span></div>
+          <div className="row"><span className="k">interests</span><span className="v">HW ⇄ SW | analog ⇄ digital</span></div>
+          <div className="row">
+            <span className="k">contact</span>
+            <span className="v">
+              <a href="mailto:rasmus.tikkanen95@gmail.com" style={{ color: "inherit", textDecoration: "none" }}>rasmus.tikkanen95@gmail.com</a>
+              {" · "}
+              <a href="https://www.linkedin.com/in/rasmus-tikkanen-7803763a5" target="_blank" rel="noreferrer" style={{ color: "inherit", textDecoration: "none" }}>LinkedIn ↗</a>
+            </span>
+          </div>
+        </div>
+      </Reveal>
     </section>
   );
 }
