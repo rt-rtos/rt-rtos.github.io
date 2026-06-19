@@ -131,7 +131,7 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
                 poster="assets/Amysynth/1.jpg"
                 aria-label="S3-Amysynth handheld synthesizer demo video"
               >
-                <source src="assets/amybox (2).mp4" type="video/mp4" />
+                <source src="assets/amybox.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               <div className="hero-video-overlay" aria-hidden="true">
