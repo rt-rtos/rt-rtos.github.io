@@ -264,6 +264,35 @@ function About() {
 const PROJECTS = [
   {
     num: "001",
+    title: "S3-Amysynth",
+    desc:
+      "A custom handheld synthesizer and drum sequencer built on the ESP32-S3 using ESP-IDF 6.0 and FreeRTOS. Runs the open-source AMY synthesis engine for real-time audio generation, drives a 16-step editable drum sequencer, and streams 48 kHz stereo audio over USB Audio Class 2.0 via TinyUSB. Controlled through a rotary encoder and push buttons with an SSD1306 OLED for sequencer state and UI feedback. Hardware path also includes a PCM5102 I2S DAC for standalone output.",
+    year: "2026",
+    lang: "C",
+    langColor: "oklch(0.55 0.12 250)",
+    tags: ["ESP32-S3", "Audio", "AMY", "FreeRTOS", "I2S", "USB-Audio", "Sequencer"],
+    href: "https://github.com/rt-rtos/S3-Amysynth",
+    schema: "amysynth",
+    thumbnail: "assets/Amysynth/1.jpg",
+    images: [
+      { src: "assets/Amysynth/1.jpg", alt: "Amysynth — hardware prototype running the drum sequencer on perfboard" },
+    ],
+  },
+  {
+    num: "002",
+    title: "asmdiff",
+    desc:
+      "A command-line tool for diffing compiled assembly across builds. Point it at two versions of a function and it normalises and compares the generated instructions, so you can see exactly what a source change, compiler flag, or optimization actually did at the instruction level - instead of guessing from noisy wall-clock timings. Grew directly out of profiling AMY's audio render loop.",
+    year: "2026",
+    lang: "Python",
+    langColor: "oklch(0.72 0.13 95)",
+    tags: ["Python", "CLI", "Assembly", "Optimization", "uvx"],
+    href: "https://github.com/rt-rtos/asmdiff",
+    run: "uvx asmdiff",
+    runHref: "https://pypi.org/project/asmdiff/",
+  },
+  {
+    num: "003",
     title: "ESP-32-RFID-WebUI",
     desc:
       "A small RFID reader built on an ESP32. It shows the scanned tag on an SD1316 OLED, stores entries in an external SQLite database and verifies UID access through offline-first look-up. Syncs and Persists UIDs to local storage, tolerant of connection loss as long as one sync has occurred. Coursework for IoT25S.",
@@ -275,7 +304,7 @@ const PROJECTS = [
     schema: "rfid",
   },
   {
-    num: "002",
+    num: "004",
     title: "S3-FFT-Matplot",
     desc:
       "A learning project for signal processing. The ESP32-S3 samples an ADC input, runs an FFT, and sends the spectrum data using CRC32 frames through USB-CDC to a Python script that plots it with matplotlib. Mostly an excuse to evaluate the capabilities of the ESP32-S3s new features and deepen my familiarity with the DSP pipeline and toolchain.",
@@ -292,23 +321,7 @@ const PROJECTS = [
     ],
   },
   {
-    num: "003",
-    title: "S3-Amysynth",
-    desc:
-      "A custom handheld synthesizer and drum sequencer built on the ESP32-S3 using ESP-IDF 6.0 and FreeRTOS. Runs the open-source AMY synthesis engine for real-time audio generation, drives a 16-step editable drum sequencer, and streams 48 kHz stereo audio over USB Audio Class 2.0 via TinyUSB. Controlled through a rotary encoder and push buttons with an SSD1306 OLED for sequencer state and UI feedback. Hardware path also includes a PCM5102 I2S DAC for standalone output.",
-    year: "2026",
-    lang: "C",
-    langColor: "oklch(0.55 0.12 250)",
-    tags: ["ESP32-S3", "Audio", "AMY", "FreeRTOS", "I2S", "USB-Audio", "Sequencer"],
-    href: "https://github.com/rt-rtos/S3-Amysynth",
-    schema: "amysynth",
-    thumbnail: "assets/Amysynth/1.jpg",
-    images: [
-      { src: "assets/Amysynth/1.jpg", alt: "Amysynth — hardware prototype running the drum sequencer on perfboard" },
-    ],
-  },
-  {
-    num: "004",
+    num: "005",
     title: "Grupparbete-IoT25S",
     desc:
       "A group project alarm clock on the ESP32-C3. The web UI is compiled directly into the firmware image as a linked binary blob — no SD card, no SPIFFS partition, no host dependency. The device serves its own interface over WiFi straight from flash, keeping the footprint minimal and the setup genuinely self-contained. NTP sync for time, configurable alarms, and a clean browser UI served from ~20 KB of embedded static assets.",
@@ -326,7 +339,7 @@ const PROJECTS = [
     ],
   },
   {
-    num: "005",
+    num: "006",
     title: "snake-game",
     desc:
       "Snake in the terminal, written in C against PDcurses on Windows and Ncurses on Linux. A small project to get more comfortable with C, static compilation, and the curses event loop.",
@@ -580,7 +593,28 @@ function Project({ p, idx, open, onToggle }) {
           <img src={p.thumbnail} alt={p.title} className="project-thumb" />
         )}
       </div>
-      <div className="project-desc">{p.desc}</div>
+      <div className="project-desc">
+        {p.desc}
+        {p.run && (
+          <div className="project-run">
+            <span className="project-run-try">▶ try it</span>
+            {p.runHref ? (
+              <a
+                href={p.runHref}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="project-run-cmd project-run-link"
+              >
+                <code>{p.run}</code>
+                <span className="project-run-ext" aria-hidden="true">↗</span>
+              </a>
+            ) : (
+              <code className="project-run-cmd">{p.run}</code>
+            )}
+          </div>
+        )}
+      </div>
       <div className="project-meta">
         <div>year &nbsp;·&nbsp; {p.year}</div>
         <div>
@@ -599,14 +633,16 @@ function Project({ p, idx, open, onToggle }) {
           <span>{p.lang}</span>
         </div>
       </div>
-      <div className="project-schema" data-image={!!(p.images && p.images.length)}>
-        <div className="project-schema-inner">
-          {p.images && p.images.length
-            ? <ProjectImageGallery images={p.images} />
-            : <ProjectSchema kind={p.schema} />
-          }
+      {((p.images && p.images.length) || p.schema) && (
+        <div className="project-schema" data-image={!!(p.images && p.images.length)}>
+          <div className="project-schema-inner">
+            {p.images && p.images.length
+              ? <ProjectImageGallery images={p.images} />
+              : <ProjectSchema kind={p.schema} />
+            }
+          </div>
         </div>
-      </div>
+      )}
     </article>
   );
 }
@@ -665,6 +701,36 @@ function Projects() {
 /* ====== Writing ====== */
 const WRITING = [
   {
+    date: "2026.07",
+    title: "Contributing upstream to AMY",
+    tag: "Open Source",
+    body: [
+      { t: "p", text: "AMY - the additive synthesis engine doing the actual sound generation in my handheld synth - is the first serious, professional codebase I've spent real time inside. For months I kept a small pile of local fixes against it that I never dared to send upstream. I was sure they were wrong, or trivial, or already obvious to people who actually understood the DSP. It was easier to sit on the patches than to risk being wrong in public." },
+      { t: "p", text: "What changed was watching a couple of the exact bugs I'd quietly worked around on my own machine get found and fixed in the open, months later. At some point sitting on them stopped feeling like modesty and started feeling like taking from a project I depend on without ever giving anything back. So I started opening PRs - small, self-contained, each one written to be as easy as possible to say yes to: minimal diffs, the reasoning spelled out, and wherever I could, mirroring a pattern the codebase already used so nothing new had to be maintained." },
+      { t: "p", text: "I didn't expect how much the responses would land. A \"thanks, merged\" from someone whose work I've been learning from has been genuinely one of the most motivating things I've had in a while - more than I'd admit out loud. It turned AMY from something I use into something I feel a small, real sense of care for." },
+      { t: "links", items: [
+        { href: "https://github.com/shorepine/amy/pull/744",   label: "#744 - reverb allocation made failure-safe" },
+        { href: "https://github.com/shorepine/amy/pull/743",   label: "#743 - NULL-deref guard in the oscillator path" },
+        { href: "https://github.com/shorepine/amy/issues/783", label: "#783 - hot-path transcendental call sites" },
+      ]},
+    ],
+  },
+  {
+    date: "2026.07",
+    title: "Optimizing AMY's hot path - and building asmdiff to see it",
+    tag: "Tooling",
+    body: [
+      { t: "p", text: "One thread in the AMY work pulled me somewhere unexpected. A lot of the render loop's cost lives in per-oscillator transcendental calls - exp2f, sinf, cosf, run once per oscillator per audio block - and there are open questions about making them cheaper without changing the sound. I tried an \"obvious\" swap (exp2f to ldexpf) on the ESP32-S3 float build and it turned out to be a regression, which is exactly the kind of thing you can't tell by staring at the C." },
+      { t: "p", text: "The problem was that I kept guessing at what the compiler actually emitted. Timing an audio loop is noisy, and reading the source tells you what you hoped happened, not what did. So I built asmdiff: give it two builds and it normalises and diffs the generated instructions for a function, so I can see precisely what a change did - did the constant fold, did the call inline, did the loop body get shorter - before trusting it anywhere near real-time audio." },
+      { t: "p", text: "It started as pure scaffolding for the AMY hot-path work, but it's become a small tool I reach for whenever I want the compiler to show its work rather than take its word for it. Run uvx asmdiff if you want to try it." },
+      { t: "links", items: [
+        { href: "https://github.com/shorepine/amy/pull/790",   label: "#790 - hoisting reverb delay-line state into locals" },
+        { href: "https://github.com/shorepine/amy/issues/783", label: "#783 - the hot-path call sites that started it" },
+        { href: "https://github.com/rt-rtos/asmdiff",          label: "rt-rtos/asmdiff" },
+      ]},
+    ],
+  },
+  {
     date: "2026.05",
     title: "Fixing a NAD 3020i: chasing DC offset on the outputs",
     tag: "Repair",
@@ -713,6 +779,15 @@ function PostContent({ blocks }) {
           <ul key={i} className="post-list">
             {b.items.map((item, j) => <li key={j}>{item}</li>)}
           </ul>
+        );
+        if (b.t === "links") return (
+          <div key={i} className="post-links">
+            {b.items.map((lnk, j) => (
+              <a key={j} href={lnk.href} target="_blank" rel="noreferrer" className="post-link">
+                {lnk.label}<span aria-hidden="true"> ↗</span>
+              </a>
+            ))}
+          </div>
         );
         return null;
       })}
