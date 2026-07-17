@@ -38,6 +38,7 @@ function TopBar({ now }) {
         </div>
         <nav className="nav">
           <a href="#projects">projects</a>
+          <a href="#oss">open source</a>
           <a href="#writing">writing</a>
           <a href="#about">about</a>
           <a href="#contact">contact</a>
@@ -136,7 +137,7 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
               </video>
               <div className="hero-video-overlay" aria-hidden="true">
                 <span className="hero-video-overlay-dot"></span>
-                Now playing — S3-Amysynth · ESP32-S3 · FreeRTOS · AMY engine · 48 kHz stereo · USB Audio 2.0
+                Now playing - S3-Amysynth · ESP32-S3 · FreeRTOS · AMY engine · 48 kHz stereo · USB Audio 2.0
               </div>
             </div>
             <figcaption className="hero-video-caption">S3-Amysynth · ESP32-S3 · groovebox · real-time synthesis</figcaption>
@@ -251,7 +252,7 @@ function About() {
             <Reveal>
               
               <span className="about-footnote-label">Working on / Learning:</span>
-              {" "}STM32 · Cortex-M · STM32CubeMX · Baremetal · Secure Networking · PCB design · Amysynth
+              {" "}Codegen · Asm Optimization · MCU Performance Benchmarking  ·  STM32 · Cortex-M · STM32CubeMX · Baremetal · Secure Networking · PCB design · Amysynth
             </Reveal>
           </div>
         </div>
@@ -266,7 +267,7 @@ const PROJECTS = [
     num: "001",
     title: "S3-Amysynth",
     desc:
-      "A custom handheld synthesizer and drum sequencer built on the ESP32-S3 using ESP-IDF 6.0 and FreeRTOS. Runs the open-source AMY synthesis engine for real-time audio generation, drives a 16-step editable drum sequencer, and streams 48 kHz stereo audio over USB Audio Class 2.0 via TinyUSB. Controlled through a rotary encoder and push buttons with an SSD1306 OLED for sequencer state and UI feedback. Hardware path also includes a PCM5102 I2S DAC for standalone output.",
+      "A handheld groovebox and synthesizer built on the ESP32-S3 (ESP-IDF 6.0, FreeRTOS) around the open-source AMY synthesis engine. A full melodic instrument - melodies, chords, drones and arpeggios alongside drums - with chord and scale quantization, full envelope and LFO editors for sound design, and an Elektron-style step sequencer: trigs with ratchets, per-step probability and repeat rates. All driven from a rotary encoder, push buttons and an SSD1306 OLED. Project management saves and loads complete machine state, so patterns and sound design survive power-off. Audio streams as 48 kHz stereo over USB Audio Class 2.0 via TinyUSB, or standalone through a PCM5102 I2S DAC.",
     year: "2026",
     lang: "C",
     langColor: "oklch(0.55 0.12 250)",
@@ -275,7 +276,7 @@ const PROJECTS = [
     schema: "amysynth",
     thumbnail: "assets/Amysynth/1.jpg",
     images: [
-      { src: "assets/Amysynth/1.jpg", alt: "Amysynth — hardware prototype running the drum sequencer on perfboard" },
+      { src: "assets/Amysynth/1.jpg", alt: "Amysynth - hardware prototype running the drum sequencer on perfboard" },
     ],
   },
   {
@@ -293,6 +294,18 @@ const PROJECTS = [
   },
   {
     num: "003",
+    title: "amy-bench",
+    desc:
+      "An on-target A/B performance benchmark for AMY on the ESP32-S3. Point it at any two git refs of an AMY checkout and one command builds both firmwares, keeps them in the two OTA app slots, and alternates boots A B A B - a one-second slot switch instead of a ~20 s reflash, with interleaving keeping board drift out of the measurement. Deterministic synth scenes report per-block wall time, CPU cycles and output CRCs over serial as JSONL, compared as per-scene deltas against measured noise. Built to answer whether a DSP change actually got faster on hardware - and whether it changed the sound.",
+    year: "2026",
+    lang: "Python",
+    langColor: "oklch(0.72 0.13 95)",
+    tags: ["ESP32-S3", "ESP-IDF", "Benchmark", "A/B", "OTA", "DSP", "Python"],
+    href: "https://github.com/rt-rtos/amy-bench",
+    schema: "abench",
+  },
+  {
+    num: "004",
     title: "ESP-32-RFID-WebUI",
     desc:
       "A small RFID reader built on an ESP32. It shows the scanned tag on an SD1316 OLED, stores entries in an external SQLite database and verifies UID access through offline-first look-up. Syncs and Persists UIDs to local storage, tolerant of connection loss as long as one sync has occurred. Coursework for IoT25S.",
@@ -304,7 +317,7 @@ const PROJECTS = [
     schema: "rfid",
   },
   {
-    num: "004",
+    num: "005",
     title: "S3-FFT-Matplot",
     desc:
       "A learning project for signal processing. The ESP32-S3 samples an ADC input, runs an FFT, and sends the spectrum data using CRC32 frames through USB-CDC to a Python script that plots it with matplotlib. Mostly an excuse to evaluate the capabilities of the ESP32-S3s new features and deepen my familiarity with the DSP pipeline and toolchain.",
@@ -316,15 +329,15 @@ const PROJECTS = [
     schema: "fft",
     thumbnail: "assets/FFTPlots.png",
     images: [
-      { src: "assets/FFTPlots.png",       alt: "matplotlib output — time domain (top) and frequency spectrum (bottom)" },
-      { src: "assets/FFTSquareWave.png",  alt: "square wave capture — aliasing visible at harmonic rolloff" },
+      { src: "assets/FFTPlots.png",       alt: "matplotlib output - time domain (top) and frequency spectrum (bottom)" },
+      { src: "assets/FFTSquareWave.png",  alt: "square wave capture - aliasing visible at harmonic rolloff" },
     ],
   },
   {
-    num: "005",
+    num: "006",
     title: "Grupparbete-IoT25S",
     desc:
-      "A group project alarm clock on the ESP32-C3. The web UI is compiled directly into the firmware image as a linked binary blob — no SD card, no SPIFFS partition, no host dependency. The device serves its own interface over WiFi straight from flash, keeping the footprint minimal and the setup genuinely self-contained. NTP sync for time, configurable alarms, and a clean browser UI served from ~20 KB of embedded static assets.",
+      "A group project alarm clock on the ESP32-C3. The web UI is compiled directly into the firmware image as a linked binary blob - no SD card, no SPIFFS partition, no host dependency. The device serves its own interface over WiFi straight from flash, keeping the footprint minimal and the setup genuinely self-contained. NTP sync for time, configurable alarms, and a clean browser UI served from ~20 KB of embedded static assets.",
     year: "2025",
     lang: "C",
     langColor: "oklch(0.55 0.12 250)",
@@ -333,13 +346,13 @@ const PROJECTS = [
     schema: "snake",
     thumbnail: "assets/alarm/Provision.jpg",
     images: [
-      { src: "assets/alarm/alarm.png",       alt: "Web UI — alarm dashboard served directly from flash" },
+      { src: "assets/alarm/alarm.png",       alt: "Web UI - alarm dashboard served directly from flash" },
       { src: "assets/alarm/Provisioned.jpg", alt: "OLED showing time and IP after WiFi provisioning" },
-      { src: "assets/alarm/Provision.jpg",   alt: "OLED WiFi provisioning screen — SSID and password" },
+      { src: "assets/alarm/Provision.jpg",   alt: "OLED WiFi provisioning screen - SSID and password" },
     ],
   },
   {
-    num: "006",
+    num: "007",
     title: "snake-game",
     desc:
       "Snake in the terminal, written in C against PDcurses on Windows and Ncurses on Linux. A small project to get more comfortable with C, static compilation, and the curses event loop.",
@@ -474,6 +487,53 @@ function ProjectSchema({ kind }) {
         })}
         <line x1="585" y1="170" x2="800" y2="170" />
         <text x="780" y="190" fontFamily="JetBrains Mono" fontSize="9" fill="var(--ink-3)" stroke="none" textAnchor="end">freq →</text>
+      </svg>
+    );
+  }
+  if (kind === "abench") {
+    return (
+      <svg viewBox="0 0 800 220" preserveAspectRatio="xMidYMid meet" fill="none" stroke="currentColor" strokeWidth="1">
+        <defs>
+          <marker id="ab-arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M0,0 L5,2.5 L0,5 Z" fill="currentColor" stroke="none" />
+          </marker>
+        </defs>
+        {/* AMY checkout */}
+        <rect x="15" y="75" width="120" height="70" />
+        <text x="75" y="100" fontFamily="JetBrains Mono" fontSize="10" fill="currentColor" stroke="none" textAnchor="middle">AMY checkout</text>
+        <text x="75" y="116" fontFamily="JetBrains Mono" fontSize="9" fill="var(--ink-3)" stroke="none" textAnchor="middle">ref A · ref B</text>
+        <text x="75" y="131" fontFamily="JetBrains Mono" fontSize="8" fill="var(--ink-3)" stroke="none" textAnchor="middle">read-only</text>
+        {/* snapshot + build A / B (dashed = scratch trees) */}
+        <rect x="205" y="35" width="140" height="55" strokeDasharray="4,3" />
+        <text x="275" y="58" fontFamily="JetBrains Mono" fontSize="9" fill="currentColor" stroke="none" textAnchor="middle">snapshot + build</text>
+        <text x="275" y="74" fontFamily="JetBrains Mono" fontSize="9" fill="var(--ink-3)" stroke="none" textAnchor="middle">firmware A</text>
+        <rect x="205" y="130" width="140" height="55" strokeDasharray="4,3" />
+        <text x="275" y="153" fontFamily="JetBrains Mono" fontSize="9" fill="currentColor" stroke="none" textAnchor="middle">snapshot + build</text>
+        <text x="275" y="169" fontFamily="JetBrains Mono" fontSize="9" fill="var(--ink-3)" stroke="none" textAnchor="middle">firmware B</text>
+        {/* ESP32-S3 with two slots */}
+        <rect x="415" y="45" width="150" height="130" />
+        <text x="490" y="70" fontFamily="JetBrains Mono" fontSize="10" fill="currentColor" stroke="none" textAnchor="middle">ESP32-S3</text>
+        <rect x="430" y="82" width="120" height="26" />
+        <text x="490" y="99" fontFamily="JetBrains Mono" fontSize="9" fill="var(--ink-3)" stroke="none" textAnchor="middle">ota_0 · A</text>
+        <rect x="430" y="116" width="120" height="26" />
+        <text x="490" y="133" fontFamily="JetBrains Mono" fontSize="9" fill="var(--ink-3)" stroke="none" textAnchor="middle">ota_1 · B</text>
+        <text x="490" y="163" fontFamily="JetBrains Mono" fontSize="8" fill="var(--ink-3)" stroke="none" textAnchor="middle">boot-swap A B A B</text>
+        {/* compare */}
+        <rect x="645" y="75" width="140" height="70" stroke="var(--accent)" fill="var(--accent)" fillOpacity="0.10" />
+        <text x="715" y="99" fontFamily="JetBrains Mono" fontSize="10" fill="var(--accent)" stroke="none" textAnchor="middle">compare.json</text>
+        <text x="715" y="115" fontFamily="JetBrains Mono" fontSize="8" fill="var(--ink-3)" stroke="none" textAnchor="middle">Δ per scene vs noise</text>
+        <text x="715" y="129" fontFamily="JetBrains Mono" fontSize="8" fill="var(--ink-3)" stroke="none" textAnchor="middle">output CRC diff</text>
+        {/* arrows */}
+        <path d="M135 95 L205 65" markerEnd="url(#ab-arr)" />
+        <path d="M135 125 L205 155" markerEnd="url(#ab-arr)" />
+        <path d="M345 62 L415 85" markerEnd="url(#ab-arr)" />
+        <path d="M345 158 L415 135" markerEnd="url(#ab-arr)" />
+        <path d="M565 110 L645 110" markerEnd="url(#ab-arr)" />
+        <text x="605" y="102" fontFamily="JetBrains Mono" fontSize="8" fill="var(--ink-3)" stroke="none" textAnchor="middle">JSONL</text>
+        <text x="605" y="124" fontFamily="JetBrains Mono" fontSize="8" fill="var(--ink-3)" stroke="none" textAnchor="middle">serial</text>
+        {/* git archive label */}
+        <text x="163" y="70" fontFamily="JetBrains Mono" fontSize="8" fill="var(--ink-3)" stroke="none" textAnchor="middle">git</text>
+        <text x="163" y="82" fontFamily="JetBrains Mono" fontSize="8" fill="var(--ink-3)" stroke="none" textAnchor="middle">archive</text>
       </svg>
     );
   }
@@ -735,17 +795,17 @@ const WRITING = [
     title: "Fixing a NAD 3020i: chasing DC offset on the outputs",
     tag: "Repair",
     body: [
-      { t: "p", text: "The NAD 3020i is a late-70s integrated amplifier with something of a cult following — modest power figures on paper, but widely regarded as one of the better-sounding budget amplifiers of its era. This one had both fuses blown and a full negative-rail DC offset sitting on the speaker outputs." },
+      { t: "p", text: "The NAD 3020i is a late-70s integrated amplifier with something of a cult following - modest power figures on paper, but widely regarded as one of the better-sounding budget amplifiers of its era. This one had both fuses blown and a full negative-rail DC offset sitting on the speaker outputs." },
       { t: "p", text: "" },
       { t: "imgs", items: [
         { src: "assets/NadTopView.jpg", caption: "Internals mid-repair" },
-        { src: "assets/NadOutputMods.jpg", caption: "PCB underside — base stoppers and added emitter resistors" },
+        { src: "assets/NadOutputMods.jpg", caption: "PCB underside - base stoppers and added emitter resistors" },
         { src: "assets/Nad30201.jpg", caption: "The finished amp" },
       ]},
-      { t: "p", text: "The actual culprits after replacing the failed output transistors were R437 and R438 — the Emitter/Collector resistor for the VAS-stage Sziklai pair Q405-408 — both open circuit. This disconnects the VAS transistors from the positive rail. The output stage being unregulated runs away in a feedback loop. slamming into the negative rail. A cracked star-ground point under a PCB mounting screw compounded things further." },
+      { t: "p", text: "The actual culprits after replacing the failed output transistors were R437 and R438 - the Emitter/Collector resistor for the VAS-stage Sziklai pair Q405-408 - both open circuit. This disconnects the VAS transistors from the positive rail. The output stage being unregulated runs away in a feedback loop. slamming into the negative rail. A cracked star-ground point under a PCB mounting screw compounded things further." },
       { t: "list", items: [
         "Replaced R437 + R438 and Q400 output transistors",
-        "Added base stopper resistors — trace cut, bridged with resistors for HF stability",
+        "Added base stopper resistors - trace cut, bridged with resistors for HF stability",
         "Added external emitter resistance at the output devices to compensate for epitaxial replacement transistors",
         "Replaced aging electrolytic and ceramic decoupling caps with film types",
         "New bulk filter capacitors",
@@ -801,7 +861,7 @@ function Writing() {
     <section className="section container" id="writing">
       <div className="section-grid">
         <div className="section-label">
-          <div className="num">§03</div>
+          <div className="num">§04</div>
           <div className="name">Writing</div>
         </div>
         <div>
@@ -846,24 +906,24 @@ function Writing() {
 const EXP = [
   {
     when: "Autumn 2026",
-    role: "LIA Internship — Seeking Position",
+    role: "LIA Internship - Seeking Position",
     place: "Stockholm, Sweden",
-    desc: "Looking for an embedded or hardware-adjacent team where I can contribute from day one. I work comfortably across the stack — from schematic and simulation through firmware and debugging. I'm self-driven, used to learning fast from documentation and datasheets, and I care about building things that actually work reliably.",
+    desc: "Looking for an embedded or hardware-adjacent team where I can contribute from day one. I work comfortably across the stack - from schematic and simulation through firmware and debugging. I'm self-driven, used to learning fast from documentation and datasheets, and I care about building things that actually work reliably.",
   },
   {
-    when: "2025 — now",
+    when: "2025 - now",
     role: "Studying IoT & Embedded Development at Jensen Yrkeshögskola.",
     place: "Stockholm, Sweden",
     desc: "Coursework in embedded C/C++, real-time systems, sensor networks, basic signal processing and electronics.",
   },
   {
-    when: "2023 — 2026",
+    when: "2023 - 2026",
     role: "Analog Circuit Design / Simulation",
     place: "Home lab",
-    desc: "Designing and simulating analog circuits — op-amp stages, filters, oscillators and power supply topologies. Using LTspice and KiCad for schematic capture and SPICE simulation, developing intuition for signal integrity, noise and component behaviour.",
+    desc: "Designing and simulating analog circuits - op-amp stages, filters, oscillators and power supply topologies. Using LTspice and KiCad for schematic capture and SPICE simulation, developing intuition for signal integrity, noise and component behaviour.",
   },
   {
-    when: "2021 — 2024",
+    when: "2021 - 2024",
     role: "Tinkering at home",
     place: "Home lab",
     desc: "Taking things apart and putting them back together again, trying to understand how they work. Electronics, Circuit design & simulation, signal integrity & grounding , analysis & troubleshooting. ",
@@ -875,7 +935,7 @@ function Experience() {
     <section className="section container" id="experience">
       <div className="section-grid">
         <div className="section-label">
-          <div className="num">§04</div>
+          <div className="num">§05</div>
           <div className="name">Experience</div>
         </div>
         <div>
@@ -906,7 +966,7 @@ function Contact() {
       <div className="contact-grid">
         <Reveal>
           <div>
-            <div className="eyebrow" style={{ marginBottom: 24 }}>§05 · Contact</div>
+            <div className="eyebrow" style={{ marginBottom: 24 }}>§06 · Contact</div>
             <h2>
               Happy to <span className="em">chat</span><br/>
               about embedded.

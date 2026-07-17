@@ -10,7 +10,7 @@ const SITE_DEFAULTS = {
   "heroLineB": "Tikkanen,",
   "heroAccent": "learning",
   "heroLineC": "embedded.",
-  "lede": "Studying IoT and embedded development in Stockholm. I like working where hardware meets software — mixed-domain signals, analog and digital electronics."
+  "lede": "Studying IoT and embedded development in Stockholm. I like working where hardware meets software - mixed-domain signals, analog and digital electronics."
 };
 
 function App() {
@@ -76,6 +76,7 @@ function App() {
         />
         <About />
         <Projects />
+        <OpenSource />
         {SHOW_WRITING && <Writing />}
         <Experience />
         <Contact />
