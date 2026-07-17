@@ -33,9 +33,13 @@ const OSS_CONFIG = {
  *   "owner/repo#123": ["First paragraph.", "Second paragraph."],
  */
 const OSS_NOTES = {
+  "shorepine/amy#881": "Putting my asmdiff tool to use in a real codebase. Full codegen scan identifiying all FP64 soft-floats",
+  "shorepine/amy#790": "Optimization building on and merged together with #787",
+  "shorepine/amy#787": "Reverb fix caused CI test refs to fail - closed, merged by hand by the maintainer.",
+  "shorepine/amy#783": "Issue reporting identified trancendentals",
   "shorepine/amy#743": "First upstream fix - NULL deref found while building S3-Amysynth.",
   "shorepine/amy#827": "Fixed a clock wrap at ~25 h that silently degraded sequencer timing.",
-  "shorepine/amy#893": "Hand-written ESP32-S3 PIE (SIMD) asm in the render path.",
+  "shorepine/amy#893": "Hand-written ESP32-S3 PIE memset/memcpy asm in the render path.",
 };
 
 const OSS_FALLBACK = [
