@@ -57,15 +57,9 @@ function TopBar({ now }) {
 
 /* ====== Hero ====== */
 function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
-  const [seq, setSeq] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
   const [volume, setVolume] = useState(0.72);
   const videoRef = useRef(null);
-  useEffect(() => {
-    const id = setInterval(() => setSeq((s) => (s + 1) % 4096), 1100);
-    return () => clearInterval(id);
-  }, []);
-  const seqHex = seq.toString(16).toUpperCase().padStart(3, "0");
 
   const handleToggleMute = () => {
     const nextMuted = !isMuted;
@@ -92,7 +86,7 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
   return (
     <section className="hero container" id="top">
       <div className="hero-meta">
-        <div>Portfolio · v0.4.2 · build {seqHex}</div>
+        <div>Portfolio</div>
         <div className="right">Stockholm, Sweden</div>
       </div>
 
@@ -1003,7 +997,6 @@ function Footer() {
   return (
     <footer className="footer">
       <span>© 2026 Rasmus Tikkanen</span>
-      <span>last build · {new Date().toISOString().slice(0, 10)}</span>
     </footer>
   );
 }
