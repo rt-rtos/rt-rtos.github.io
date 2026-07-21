@@ -29,24 +29,30 @@ const OSS_CONFIG = {
  * "owner/repo#number". Nothing renders for items without a key.
  * A string gives one paragraph; an array of strings gives several:
  *
- *   "shorepine/amy#790": "Reverb fix caused CI test refs to fail - closed, merged by hand by the maintainer.",
+ *   "shorepine/amy#787": "Closed, not rejected: re-landed by the maintainer as #809.",
  *   "owner/repo#123": ["First paragraph.", "Second paragraph."],
+ *
+ * Any "#123" in a note is auto-linked to that number in the same repo, so a
+ * closed PR can point at wherever the work actually landed.
  */
 const OSS_NOTES = {
   "shorepine/amy#881": "Putting my asmdiff tool to use in a real codebase. Full codegen scan identifiying all FP64 soft-floats",
-  "shorepine/amy#790": "Optimization building on and merged together with #787",
-  "shorepine/amy#787": "Reverb fix caused CI test refs to fail - closed, merged by hand by the maintainer.",
-  "shorepine/amy#783": "Issue reporting identified trancendentals",
+  "shorepine/amy#950": "Root-caused clipping on resonant filters below ~100 Hz: the fixed-point multiply truncated the biquad's deliberately small feedback corrections down to 2-3 significant bits. Closed, not rejected - the maintainer took the exact 64-bit multiply, found it faster than the path it replaced, and rolled it out across all filtering in #951.",
+  "shorepine/amy#790": "Caches the reverb delay-line state in locals instead of re-reading it through memory every sample. Closed, not rejected - the maintainer cloned it into #811 to fix the conflicts, and merged it there.",
+  "shorepine/amy#787": "Reverb feedback was never written back through the low-pass filter. The two failing CI tests were the fix working - their reference WAVs came from the unfiltered path. Closed, not rejected - re-landed by the maintainer as #809.",
+  "shorepine/amy#783": "Flagged the libm transcendentals still being called once per oscillator per render block - freq_of_logfreq, plus cosf/sinf in filter_process. The maintainer implemented the removals in #875, worth ~3% of total render time; #877 then extended the same treatment to the hpf and bpf coefficient generators.",
   "shorepine/amy#743": "First upstream fix - NULL deref found while building S3-Amysynth.",
   "shorepine/amy#827": "Fixed a clock wrap at ~25 h that silently degraded sequencer timing.",
-  "shorepine/amy#893": "Hand-written ESP32-S3 PIE memset/memcpy asm in the render path.",
+  "shorepine/amy#893": "Hand-rolled ESP32-S3 PIE memset/memcpy asm in the render path.",
 };
 
 const OSS_FALLBACK = [
+  { repo: "shorepine/amy", number: 950, type: "pr",    state: "closed", date: "2026-07-20", title: "Use full-precision multiply for biquad feedback coefficients" },
+  { repo: "shorepine/amy", number: 949, type: "pr",    state: "merged", date: "2026-07-20", title: "Reject mod_source cycles so chained modulators can't recurse unbounded" },
   { repo: "shorepine/amy", number: 893, type: "pr",    state: "merged", date: "2026-07-15", title: "Inline PIE asm in algorithms.c zero()/copy()" },
   { repo: "shorepine/amy", number: 891, type: "issue", state: "open",   date: "2026-07-14", title: "Deterministic on-target A/B benchmark for DSP changes" },
   { repo: "shorepine/amy", number: 890, type: "issue", state: "closed", date: "2026-07-14", title: "loadsweep render_us: the EMA reads low and hides deadline misses" },
-  { repo: "shorepine/amy", number: 889, type: "issue", state: "open",   date: "2026-07-14", title: "ESP32-S3: PIE (SIMD) block clear/copy in the render path" },
+  { repo: "shorepine/amy", number: 889, type: "issue", state: "closed", date: "2026-07-14", title: "ESP32-S3: PIE (SIMD) block clear/copy in the render path" },
   { repo: "shorepine/amy", number: 881, type: "pr",    state: "merged", date: "2026-07-12", title: "Keep soft-float libcalls out of the render path" },
   { repo: "shorepine/amy", number: 877, type: "pr",    state: "merged", date: "2026-07-11", title: "sin/cos_lut in the hpf and bpf coefficient generators too" },
   { repo: "shorepine/amy", number: 827, type: "pr",    state: "merged", date: "2026-07-07", title: "amy_sysclock(): fix clock wrap at ~25 h and precision decay" },
@@ -145,25 +151,53 @@ function useContributions() {
 
 const OSS_STATE_LABEL = { merged: "merged", open: "open", closed: "closed" };
 
+/* Notes routinely point at a sibling PR ("closed, re-landed as #809"), so any
+ * "#123" in a note becomes a link into the same repo. GitHub redirects
+ * /issues/N to /pull/N when N is a PR, so one form covers both. */
+function ossNoteNodes(text, repo, keyPrefix) {
+  const parts = [];
+  let cursor = 0;
+  for (const m of text.matchAll(/#(\d+)/g)) {
+    if (m.index > cursor) parts.push(text.slice(cursor, m.index));
+    parts.push(
+      <a
+        key={`${keyPrefix}-${m.index}`}
+        className="oss-note-link"
+        href={`https://github.com/${repo}/issues/${m[1]}`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        #{m[1]}
+      </a>
+    );
+    cursor = m.index + m[0].length;
+  }
+  if (cursor < text.length) parts.push(text.slice(cursor));
+  return parts;
+}
+
+/* The row is not a wrapping <a> - notes contain their own links, which cannot
+ * legally nest. Instead the title anchor is stretched over the whole row via
+ * .oss-title::after, and note links are lifted above it with z-index. */
 function OssRow({ it }) {
   const note = OSS_NOTES[`${it.repo}#${it.number}`];
   return (
-    <a className="oss-item" href={ossItemHref(it)} target="_blank" rel="noreferrer">
+    <div className="oss-item">
       <div className="oss-date">{it.date.replace(/-/g, ".").slice(0, 7)}</div>
       <div className="oss-main">
-        <div className="oss-title">
+        <a className="oss-title" href={ossItemHref(it)} target="_blank" rel="noreferrer">
           <span className="oss-ref">{it.repo}#{it.number}</span>
           {it.title}
           <span className="arr" aria-hidden="true"> ↗</span>
-        </div>
+        </a>
         {note && (Array.isArray(note) ? note : [note]).map((n, i) => (
-          <p key={i} className="oss-note">{n}</p>
+          <p key={i} className="oss-note">{ossNoteNodes(n, it.repo, i)}</p>
         ))}
       </div>
       <div className="oss-badge" data-state={it.state} data-type={it.type}>
         {it.type === "pr" ? "PR" : "issue"} · {OSS_STATE_LABEL[it.state] || it.state}
       </div>
-    </a>
+    </div>
   );
 }
 
