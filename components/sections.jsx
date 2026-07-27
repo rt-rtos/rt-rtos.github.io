@@ -285,6 +285,7 @@ const PROJECTS = [
     href: "https://github.com/rt-rtos/asmdiff",
     run: "uvx asmdiff",
     runHref: "https://pypi.org/project/asmdiff/",
+    featured: { label: "Terminal Trove", href: "https://terminaltrove.com/asmdiff/" },
   },
   {
     num: "003",
@@ -666,6 +667,21 @@ function Project({ p, idx, open, onToggle }) {
             ) : (
               <code className="project-run-cmd">{p.run}</code>
             )}
+          </div>
+        )}
+        {p.featured && (
+          <div className="project-run">
+            <span className="project-run-try">★ featured on</span>
+            <a
+              href={p.featured.href}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="project-run-cmd project-run-link"
+            >
+              {p.featured.label}
+              <span className="project-run-ext" aria-hidden="true">↗</span>
+            </a>
           </div>
         )}
       </div>
