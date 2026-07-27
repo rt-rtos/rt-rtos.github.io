@@ -755,6 +755,20 @@ a.project-run-link:hover {
   font-size: 10px;
   color: var(--accent);
 }
+/* Featured-on chip: a mini terminal window - dark ground + phosphor green
+   in every theme, distinguishing it from the accent-tinted "try it" chip. */
+a.project-run-link.project-featured-link {
+  color: var(--signal);
+  background: oklch(0.16 0.02 150);
+  border-color: oklch(0.34 0.06 145);
+}
+a.project-run-link.project-featured-link:hover {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+a.project-run-link.project-featured-link .project-run-ext {
+  color: var(--signal);
+}
 .project-meta {
   display: flex;
   flex-direction: column;

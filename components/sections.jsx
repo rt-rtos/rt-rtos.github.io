@@ -677,7 +677,7 @@ function Project({ p, idx, open, onToggle }) {
               target="_blank"
               rel="noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="project-run-cmd project-run-link"
+              className="project-run-cmd project-run-link project-featured-link"
             >
               {p.featured.label}
               <span className="project-run-ext" aria-hidden="true">↗</span>
