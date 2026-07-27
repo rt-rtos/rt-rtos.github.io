@@ -671,7 +671,7 @@ function Project({ p, idx, open, onToggle }) {
         )}
         {p.featured && (
           <div className="project-run">
-            <span className="project-run-try">★ featured on</span>
+            <span className="project-run-try">featured on</span>
             <a
               href={p.featured.href}
               target="_blank"
