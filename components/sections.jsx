@@ -100,7 +100,7 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
 
       <Reveal delay={180}>
         <p style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(11px, 0.95vw, 13px)", color: "var(--accent)", margin: "10px 0 0", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-          &#9656;&nbsp; Seeking LIA internship · Autumn 2026
+          &#9656;&nbsp; Seeking LIA internship · Sep 28 - Dec 18, 2026
         </p>
       </Reveal>
 
@@ -915,7 +915,7 @@ function Writing() {
 /* ====== Experience ====== */
 const EXP = [
   {
-    when: "Autumn 2026",
+    when: "Sep 28 - Dec 18, 2026",
     role: "LIA Internship - Seeking Position",
     place: "Stockholm, Sweden",
     desc: "Looking for an embedded or hardware-adjacent team where I can contribute from day one. I work comfortably across the stack - from schematic and simulation through firmware and debugging. I'm self-driven, used to learning fast from documentation and datasheets, and I care about building things that actually work reliably.",
