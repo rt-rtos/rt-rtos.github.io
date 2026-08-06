@@ -771,6 +771,21 @@ function Projects() {
 /* ====== Writing ====== */
 const WRITING = [
   {
+    date: "2026.08",
+    title: "The click that was always there: tracing USB audio dropouts into TinyUSB",
+    tag: "Debugging",
+    body: [
+      { t: "p", text: "My synth has clicked since its very first boot. Sub-millisecond dropouts in the USB audio stream - rare enough to live with, persistent enough that I had a standing excuse (\"probably the USB buffer\") and zero evidence for it. Every feature the project gained was built on top of that little background crackle. After a big engine upgrade seemed to make it worse, I finally went after it properly - and the trail ended two vendor layers below my code, with one fix now merged into TinyUSB and a companion PR open against Espressif's esp-iot-solution." },
+      { t: "p", text: "The turning point was refusing to debug by ear. I recorded the host-side capture and analyzed the WAV directly: 193 dropouts in 19.5 seconds, each one an exact run of digital zeros in both channels, 4 to 16 samples wide, and their start times sat on a 50 ms grid - the period of my display task. That one analysis did most of the work. A synthesis bug can't write synchronized exact zeros into both channels on a UI task's schedule, so the entire DSP path was exonerated in an afternoon. Then I instrumented my own producer side: render times peaking at 28% of budget, tens of thousands of blocks without a single overrun, ring-buffer underruns near zero - while the clicks stayed audible. Every counter I owned was clean. Whatever was dropping audio lived below my application." },
+      { t: "p", text: "Reading down the stack found the defects, stacked. Espressif's usb_device_uac component sizes its outgoing mic FIFO at two to three USB packets, and its own refill logic can never fill it past roughly one packet - permanently below the setpoint TinyUSB's flow controller steers toward. The stream spends its entire life one ordinary scheduling hiccup away from shipping a zero-length packet, which the host hears as a click. TinyUSB, for its part, documents that this flow controller needs a FIFO of at least four packets and guards for exactly that - but the comparison in the guard is inverted, so instead of failing safe on the undersized FIFO it engaged anyway. And even at a correct size, the controller climbs from empty so slowly that every stream open began with seconds of dropouts. Three small defects, none visible alone, together explaining a lifetime of crackle." },
+      { t: "p", text: "I fixed my own device first - vendored the component, resized and prefilled the FIFO, verified on hardware that a synth that had clicked since day one now runs silent - and then sent both fixes upstream: a one-line guard correction to TinyUSB, merged the next day, and a PR to esp-iot-solution that sizes the FIFO from the documented constraints and prefills it to the setpoint at stream open, mirroring what the component already does on its speaker path. The two are connected in a way I find satisfying: with TinyUSB's guard fixed, the component's current undersized FIFO will simply stop receiving flow control on the next TinyUSB update, so the sizing question is no longer a tuning suggestion - it's something the component now has to answer either way." },
+      { t: "links", items: [
+        { href: "https://github.com/hathach/tinyusb/pull/3809", label: "tinyusb #3809 - inverted FIFO-size guard in EP-IN flow control (merged)" },
+        { href: "https://github.com/espressif/esp-iot-solution/pull/764", label: "esp-iot-solution #764 - usb_device_uac mic FIFO sizing + stream-open prefill" },
+      ]},
+    ],
+  },
+  {
     date: "2026.07",
     title: "Contributing upstream to AMY",
     tag: "Open Source",
