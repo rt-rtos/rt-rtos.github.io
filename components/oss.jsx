@@ -205,10 +205,13 @@ function OpenSource() {
   const { items, source } = useContributions();
   const [filter, setFilter] = useState("all");
   const [collapsed, setCollapsed] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
+  const LIST_LIMIT = 10;
   const shown = (items || []).filter(
     (it) => filter === "all" || it.type === filter
   );
+  const visible = showAll ? shown : shown.slice(0, LIST_LIMIT);
   const merged = (items || []).filter((it) => it.state === "merged").length;
   const issues = (items || []).filter((it) => it.type === "issue").length;
   const repos = [...new Set((items || []).map((it) => it.repo))];
@@ -264,12 +267,26 @@ function OpenSource() {
             {items !== null && shown.length === 0 && (
               <div className="oss-empty">- nothing here yet -</div>
             )}
-            {shown.map((it, i) => (
+            {visible.map((it, i) => (
               <Reveal key={`${it.repo}#${it.number}`} delay={Math.min(i, 6) * 50}>
                 <OssRow it={it} />
               </Reveal>
             ))}
           </div>
+          {shown.length > LIST_LIMIT && (
+            <div style={{ marginTop: 16, display: "flex", justifyContent: "center" }}>
+              <button
+                className="oss-collapse"
+                style={{ marginBottom: 0 }}
+                aria-expanded={showAll}
+                onClick={() => setShowAll((s) => !s)}
+              >
+                {showAll
+                  ? "▴ collapse list"
+                  : `▾ expand · ${shown.length - LIST_LIMIT} more`}
+              </button>
+            </div>
+          )}
           <Reveal delay={200}>
             <div style={{ marginTop: 24, display: "flex", justifyContent: "flex-end" }}>
               <a
