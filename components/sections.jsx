@@ -787,6 +787,22 @@ const WRITING = [
   },
   {
     date: "2026.07",
+    title: "From a biquad truncation bug to simplifying AMY's fixed-point multiplies",
+    tag: "Performance",
+    body: [
+      { t: "p", text: "AMY's fixed-point filters multiplied their biquad feedback coefficients with a 32x32 routine that truncates both operands to 12 fractional bits to keep the product in 32 bits. The split-feedback kernel exists precisely to protect pole precision - it carries correction terms that are deliberately tiny - and tiny is exactly what 12-bit truncation destroys: at a 65 Hz cutoff with Q = 4 the corrections keep 2-3 significant bits, and the pole lands quasi-randomly around its target. Overshoot and the filter rings up ~12 dB into sustained full-scale clipping; overdamp and the resonance quietly vanishes. I hit this as intermittent clipping from a resonant HPF in my synth, traced it to the multiply, and sent a fix upstream: do the product in int64_t, exact. My benchmarks showed it costing 5-6% on the affected filters, which I argued was a fair price for correctness." },
+      { t: "p", text: "I expected a \"correct but slower, fine\" review. Instead the maintainer measured the 64-bit multiply on the ESP32-S3, found it faster than the shift gymnastics it replaced, and adopted it beyond the bug: the 24 dB lowpass dropped its whole block-floating-point path for a plain kernel on the same primitive. My A/B bench of the merged result: -24% render cycles on the LPF24-heavy scene, and the tightest scene in my set nearly doubled its headroom, 10.2% to 18.5%. A fix I had priced as a small regression came back as the biggest single perf win my synth had seen." },
+      { t: "p", text: "The open question was where else the old assumption - that a 32-bit product is all an MCU gives you - still held. I compiled the filter path for both Pico cores and posted the comparison: even on the Cortex-M0+, where the 64-bit product is a library call, the SMUL64R kernel came out at 209 instructions against 473 for block-floating-point; on the RP2350's M33, with a hardware 32x32-to-64 multiply, 112 against 322. A week later the same primitive went into the parametric EQ - \"even bigger win\" in the PR's words, -14% full-chord render time on the project's hardware bench - and the platform gate flipped from an allowlist (ESP32-S3 and desktop) to a denylist: 64-bit multiply everywhere except ARMv6-M, with the block-floating-point machinery fenced off as a legacy path for the RP2040 alone." },
+      { t: "p", text: "To be clear about credit: the EQ rework and the platform-wide adoption are the maintainer's engineering, not mine. My part was the primitive and the evidence - and I supplied that evidence without seeing what it implied. I was optimizing one filter; it took someone with the whole system in their head to read the same numbers and recognize a stale constraint with an entire layer of machinery resting on it. In a non-collaborative project this would have stayed an HPF fix, and the block-floating-point layer - correct engineering against a limitation newer silicon had quietly removed - would still be carrying every platform. That gap, between the evidence I had in hand and the conclusion I didn't draw from it, is what I am trying to learn from most." },
+      { t: "links", items: [
+        { href: "https://github.com/shorepine/amy/pull/950", label: "#950 - the truncation bug report and int64_t fix" },
+        { href: "https://github.com/shorepine/amy/pull/951", label: "#951 - SMUL64R adopted across the filtering (merged)" },
+        { href: "https://github.com/shorepine/amy/pull/973", label: "#973 - SMUL64R in the parametric EQ, block-floating-point fenced off (merged)" },
+      ]},
+    ],
+  },
+  {
+    date: "2026.07",
     title: "Contributing upstream to AMY",
     tag: "Open Source",
     body: [
