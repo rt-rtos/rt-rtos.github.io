@@ -184,7 +184,7 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
         <div className="stack hero-stack">
           <div className="row"><span className="k">role</span><span className="v">Embedded Developer</span></div>
           <div className="row"><span className="k">studying</span><span className="v">IoT &amp; Embedded Dev · Jensen YH </span></div>
-          <div className="row"><span className="k">stack</span><span className="v">C / C++ · RTOS · ESP-IDF · Python </span></div>
+          <div className="row"><span className="k">stack</span><span className="v">C / C++ · Python · FreeRTOS · ESP-IDF  </span></div>
           <div className="row"><span className="k">interests</span><span className="v">HW ⇄ SW | analog ⇄ digital</span></div>
           <div className="row">
             <span className="k">contact</span>
@@ -234,8 +234,8 @@ function About() {
                 <span className="k">github</span><span className="v">@rt-rtos</span>
                 <span className="k">based</span><span className="v">Stockholm, Sweden</span>
                 <span className="k">field</span><span className="v">Embedded · IoT</span>
-                <span className="k">tools</span><span className="v">ESP-IDF · FreeRTOS · PlatformIO · Arduino · KiCAD </span>
-                <span className="k">learning</span><span className="v"> STM32Cube · RPI SDK · Zephyr + West · Advanced KiCAD </span>
+                <span className="k">tools</span><span className="v"> CMake · Git · ESP-IDF · Bash · clang-tools </span>
+                <span className="k">learning</span><span className="v"> STM32Cube · Emb. Linux · RPI SDK · Zephyr · KiCAD </span>
                 <span className="k">langs</span><span className="v">C · C++ · Python </span>
                 <span className="k">native</span><span className="v"> SV · EN</span>
               </div>
@@ -265,7 +265,7 @@ const PROJECTS = [
     year: "2026",
     lang: "C",
     langColor: "oklch(0.55 0.12 250)",
-    tags: ["ESP32-S3", "Audio", "AMY", "FreeRTOS", "I2S", "USB-Audio", "Sequencer"],
+    tags: ["ESP32-S3", "Audio", "AMY", "FreeRTOS", "I2S", "USB-Audio", "GrooveBox"],
     href: "https://github.com/rt-rtos/S3-Amysynth",
     schema: "amysynth",
     thumbnail: "assets/Amysynth/1.jpg",
@@ -286,6 +286,10 @@ const PROJECTS = [
     run: "uvx asmdiff",
     runHref: "https://pypi.org/project/asmdiff/",
     featured: { label: "Terminal Trove", href: "https://terminaltrove.com/asmdiff/" },
+    thumbnail: "assets/esp32-matrix.gif",
+    images: [
+      { src: "assets/esp32-matrix.gif", alt: "asmdiff recompiling an ESP32-S3 project against every Xtensa ESP32 target by borrowing its compile-db - exposing the ESP32-S2's lack of hardware floating point" },
+    ],
   },
   {
     num: "003",
@@ -295,7 +299,7 @@ const PROJECTS = [
     year: "2026",
     lang: "Python",
     langColor: "oklch(0.72 0.13 95)",
-    tags: ["ESP32-S3", "ESP-IDF", "Benchmark", "A/B", "OTA", "DSP", "Python"],
+    tags: ["ESP32-S3", "ESP-IDF", "Benchmark", "A/B", "OTA", "DSP", "Python", "CI/CD"],
     href: "https://github.com/rt-rtos/amy-bench",
     schema: "abench",
   },
@@ -332,7 +336,7 @@ const PROJECTS = [
     num: "006",
     title: "Grupparbete-IoT25S",
     desc:
-      "A group project alarm clock on the ESP32-C3. The web UI is compiled directly into the firmware image as a linked binary blob - no SD card, no SPIFFS partition, no host dependency. The device serves its own interface over WiFi straight from flash, keeping the footprint minimal and the setup genuinely self-contained. NTP sync for time, configurable alarms, and a clean browser UI served from ~20 KB of embedded static assets.",
+      "A group project in IoT Design & Architecture: An alarm clock on the ESP32-C3. The web UI is compiled directly into the firmware image as a linked binary blob - no SD card, no SPIFFS partition, no host dependency. The device serves its own interface over WiFi straight from flash, keeping the footprint minimal and the setup genuinely self-contained. NTP sync for time, configurable alarms, and a clean browser UI served from ~20 KB of embedded static assets. Solo PCB design project, focused on designing to real manufacturing constraints, real BOMs, and board stackup.",
     year: "2025",
     lang: "C",
     langColor: "oklch(0.55 0.12 250)",
@@ -796,8 +800,8 @@ const WRITING = [
       { t: "p", text: "To be clear about credit: the EQ rework and the platform-wide adoption are the maintainer's engineering, not mine. My part was the primitive and the evidence - and I supplied that evidence without seeing what it implied. I was optimizing one filter; it took someone with the whole system in their head to read the same numbers and recognize a stale constraint with an entire layer of machinery resting on it. In a non-collaborative project this would have stayed an HPF fix, and the block-floating-point layer - correct engineering against a limitation newer silicon had quietly removed - would still be carrying every platform. That gap, between the evidence I had in hand and the conclusion I didn't draw from it, is what I am trying to learn from most." },
       { t: "links", items: [
         { href: "https://github.com/shorepine/amy/pull/950", label: "#950 - the truncation bug report and int64_t fix" },
-        { href: "https://github.com/shorepine/amy/pull/951", label: "#951 - SMUL64R adopted across the filtering (merged)" },
-        { href: "https://github.com/shorepine/amy/pull/973", label: "#973 - SMUL64R in the parametric EQ, block-floating-point fenced off (merged)" },
+        { href: "https://github.com/shorepine/amy/pull/951", label: "#951 - SMUL64R adopted across the filtering (maintainer)" },
+        { href: "https://github.com/shorepine/amy/pull/973", label: "#973 - SMUL64R in the parametric EQ, block-floating-point fenced off (maintainer)" },
       ]},
     ],
   },
