@@ -32,24 +32,25 @@ function TopBar({ now }) {
   return (
     <header className="topbar">
       <div className="left">
-        <div className="mark">
+        <a className="mark" href="#top">
           <span className="glyph" aria-hidden="true"></span>
           <span>RT&nbsp;//&nbsp;rt-rtos</span>
-        </div>
+        </a>
         <nav className="nav">
-          <a href="#projects">projects</a>
+          <a href="#about">about</a>
+          <a href="#work">projects</a>
           <a href="#oss">open source</a>
           <a href="#writing">writing</a>
-          <a href="#about">about</a>
+          <a href="#experience">experience</a>
           <a href="#contact">contact</a>
         </nav>
       </div>
       <div className="right">
         <span className="status">
           <span className="dot" aria-hidden="true"></span>
-          <span>available · Aug - 2026</span>
+          <span>available<span className="status-date"> · Aug - 2026</span></span>
         </span>
-        <span style={{ color: "var(--ink-3)" }}>{now}</span>
+        <span className="clock">{now}</span>
       </div>
     </header>
   );

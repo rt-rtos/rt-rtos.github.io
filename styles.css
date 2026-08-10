@@ -176,6 +176,12 @@ body[data-texture="paper"]::before {
 }
 
 /* ============== Top bar ============== */
+/* Anchor jumps: land sections below the sticky bar, smooth unless the OS asks otherwise */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+section[id] { scroll-margin-top: 76px; }
+
 .topbar {
   position: sticky;
   top: 0;
@@ -235,6 +241,15 @@ body[data-texture="paper"]::before {
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
+}
+.topbar .clock { color: var(--ink-3); }
+.topbar .nav, .topbar .status { white-space: nowrap; }
+/* Middle widths: shed the clock, then the date, so the nav never collides with the status */
+@media (min-width: 721px) and (max-width: 1000px) {
+  .topbar .clock { display: none; }
+}
+@media (min-width: 721px) and (max-width: 880px) {
+  .topbar .status-date { display: none; }
 }
 @media (max-width: 720px) {
   .topbar .nav { display: none; }
