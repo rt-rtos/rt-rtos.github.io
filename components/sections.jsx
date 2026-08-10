@@ -48,7 +48,7 @@ function TopBar({ now }) {
       <div className="right">
         <span className="status">
           <span className="dot" aria-hidden="true"></span>
-          <span>available<span className="status-date"> · Aug - 2026</span></span>
+          <span>available<span className="status-date"> · Sep 28</span></span>
         </span>
         <span className="clock">{now}</span>
       </div>
