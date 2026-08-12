@@ -44,6 +44,8 @@ const OSS_NOTES = {
   "shorepine/amy#743": "First upstream fix - NULL deref found while building S3-Amysynth.",
   "shorepine/amy#827": "Fixed a clock wrap at ~25 h that silently degraded sequencer timing.",
   "shorepine/amy#893": "Hand-rolled ESP32-S3 PIE memset/memcpy asm in the render path.",
+  "shorepine/amy#1050": "The PCM phase accumulator kept only 8 fractional bits, so the representable-pitch grid went 90-120 cents coarse at the bottom of the range: measured -84.5 cents three octaves down on the 808 bass drum, with adjacent semitones detuning by different amounts. My version bought the resolution out of the index range, capping sample length. Closed, not rejected - the maintainer took the diagnosis and avoided that tradeoff in #1064, widening the fraction to 16 bits within the block instead; re-measuring with this PR's harness put the error under half a cent.",
+  "shorepine/amy#1051": "Restarting a PCM voice snaps the phase back mid-waveform, and the amplitude step is an audible click - worst on long, low drum tails. I cancelled it with a short decaying compensator to keep onset latency at zero. Closed, not rejected - the maintainer wanted something more organic than a synthetic correction signal and landed a zero-crossing defer in #1070, which holds the restart until the outgoing tail reaches zero.",
 };
 
 const OSS_FALLBACK = [
