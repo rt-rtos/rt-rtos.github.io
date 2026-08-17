@@ -1343,6 +1343,23 @@ a.project-run-link.project-featured-link .project-run-ext {
   padding: 24px 0;
   border-bottom: 1px solid var(--rule);
 }
+/* Shown only when the list is the hand-picked shortlist, so the shorter list
+   can't be read as the complete upstream history. */
+.oss-curated-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--ink-3);
+  max-width: 62ch;
+  margin: 0 0 8px;
+  padding-left: 12px;
+  border-left: 2px solid var(--signal);
+}
+.oss-curated-note a {
+  color: var(--accent);
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
 @media (max-width: 720px) {
   .oss-item { grid-template-columns: 1fr; gap: 4px; }
   .oss-badge { text-align: left; }

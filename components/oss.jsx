@@ -11,10 +11,14 @@ const { useState, useEffect } = React;
  *                     (e.g. ["shorepine/amy"]) to restrict the section.
  *   2. OSS_NOTES    - optional one-line annotations, keyed "owner/repo#number".
  *                     Add a line here to explain why a contribution mattered.
- *   3. OSS_FALLBACK - static snapshot rendered when the GitHub API is
- *                     unreachable or rate-limited. Also the place to pin
+ *   3. OSS_CURATED  - hand-picked highlights, rendered ONLY when the GitHub
+ *                     API is unreachable or rate-limited. Deliberately NOT a
+ *                     mirror of the live feed: it is a shortlist, and the
+ *                     section says so when it falls back to it. The two
+ *                     sources are exclusive - an entry here never joins a
+ *                     successful live result, so this is not a place to pin
  *                     contributions the API can't see (other forges, etc.).
- *                     Refresh it occasionally by copying the live data.
+ *                     That would need a separate list unioned into `fresh`.
  */
 
 const OSS_CONFIG = {
@@ -25,7 +29,7 @@ const OSS_CONFIG = {
 };
 
 /* Per-item descriptions, shown beneath the entry. To annotate any PR or
- * issue - live-fetched or snapshot - add ONE line here, keyed
+ * issue - live-fetched or curated - add ONE line here, keyed
  * "owner/repo#number". Nothing renders for items without a key.
  * A string gives one paragraph; an array of strings gives several:
  *
@@ -48,24 +52,26 @@ const OSS_NOTES = {
   "shorepine/amy#1051": "Restarting a PCM voice snaps the phase back mid-waveform, and the amplitude step is an audible click - worst on long, low drum tails. I cancelled it with a short decaying compensator to keep onset latency at zero. Closed, not rejected - the maintainer wanted something more organic than a synthetic correction signal and landed a zero-crossing defer in #1070, which holds the restart until the outgoing tail reaches zero.",
 };
 
-const OSS_FALLBACK = [
-  { repo: "shorepine/amy", number: 950, type: "pr",    state: "closed", date: "2026-07-20", title: "Use full-precision multiply for biquad feedback coefficients" },
-  { repo: "shorepine/amy", number: 949, type: "pr",    state: "merged", date: "2026-07-20", title: "Reject mod_source cycles so chained modulators can't recurse unbounded" },
-  { repo: "shorepine/amy", number: 893, type: "pr",    state: "merged", date: "2026-07-15", title: "Inline PIE asm in algorithms.c zero()/copy()" },
-  { repo: "shorepine/amy", number: 891, type: "issue", state: "open",   date: "2026-07-14", title: "Deterministic on-target A/B benchmark for DSP changes" },
-  { repo: "shorepine/amy", number: 890, type: "issue", state: "closed", date: "2026-07-14", title: "loadsweep render_us: the EMA reads low and hides deadline misses" },
-  { repo: "shorepine/amy", number: 889, type: "issue", state: "closed", date: "2026-07-14", title: "ESP32-S3: PIE (SIMD) block clear/copy in the render path" },
-  { repo: "shorepine/amy", number: 881, type: "pr",    state: "merged", date: "2026-07-12", title: "Keep soft-float libcalls out of the render path" },
-  { repo: "shorepine/amy", number: 877, type: "pr",    state: "merged", date: "2026-07-11", title: "sin/cos_lut in the hpf and bpf coefficient generators too" },
-  { repo: "shorepine/amy", number: 827, type: "pr",    state: "merged", date: "2026-07-07", title: "amy_sysclock(): fix clock wrap at ~25 h and precision decay" },
-  { repo: "shorepine/amy", number: 790, type: "pr",    state: "closed", date: "2026-07-04", title: "Hoist stereo_reverb() delay-line state into locals" },
-  { repo: "shorepine/amy", number: 787, type: "pr",    state: "closed", date: "2026-07-03", title: "Fix stereo_reverb LPF state never being written back" },
-  { repo: "shorepine/amy", number: 783, type: "issue", state: "closed", date: "2026-06-30", title: "Other hot-path exp2f/cosf/sinf call sites" },
-  { repo: "shorepine/amy", number: 764, type: "pr",    state: "merged", date: "2026-06-25", title: "Fix float-mode build break: add MUL5A_SS / MUL6A_SS fallbacks" },
-  { repo: "shorepine/amy", number: 744, type: "pr",    state: "merged", date: "2026-06-21", title: "Make reverb allocation failure-safe (mirrors existing echo guard)" },
-  { repo: "shorepine/amy", number: 743, type: "pr",    state: "merged", date: "2026-06-20", title: "Fix NULL deref on freed chained_osc in render_osc_wave" },
-  { repo: "shorepine/amy", number: 740, type: "pr",    state: "merged", date: "2026-06-20", title: "Fix copy-paste typo in stereo_reverb low-pass filter state" },
-  { repo: "shorepine/amy", number: 625, type: "issue", state: "closed", date: "2026-03-22", title: "ESP-IDF: AMY crashes at boot - ESP_TASK_PRIO_MAX is invalid as a FreeRTOS task priority" },
+/* Shortlist, not a mirror. Pick for what a reader learns from the entry -
+ * a root cause, a subsystem, a second upstream - and let the live feed carry
+ * the long tail. Titles are cleaned up where the original was noisy. */
+const OSS_CURATED = [
+  { repo: "shorepine/amy",              number: 1107, type: "pr",    state: "merged", date: "2026-08-14", title: "Add ram_caps_oscs: separate memory caps for the per-osc state arena" },
+  { repo: "shorepine/amy",              number: 1106, type: "pr",    state: "merged", date: "2026-08-14", title: "Free a released voice's oscs; describing an osc no longer allocates it" },
+  { repo: "shorepine/amy",              number: 1051, type: "pr",    state: "closed", date: "2026-08-04", title: "PCM: cancel the retrigger phase-snap click with a short decaying compensator" },
+  { repo: "shorepine/amy",              number: 1050, type: "pr",    state: "closed", date: "2026-08-04", title: "PCM: raise index fractional bits 8 -> 12 - fixes audible detune on pitched-down samples" },
+  { repo: "shorepine/amy",              number: 1049, type: "pr",    state: "merged", date: "2026-08-04", title: "Don't advance the sequencer from amy_event_to_deltas_queue() - fixes a tick race for multithreaded embedders" },
+  { repo: "hathach/tinyusb",            number: 3809, type: "pr",    state: "merged", date: "2026-08-04", title: "audio: fix inverted FIFO-size guard in EP-IN flow control" },
+  { repo: "espressif/esp-iot-solution", number: 764,  type: "pr",    state: "open",   date: "2026-08-04", title: "usb_device_uac: fix chronic mic-stream dropouts" },
+  { repo: "shorepine/amy",              number: 961,  type: "pr",    state: "merged", date: "2026-07-23", title: "Survive out-of-memory on the voice/event allocation paths" },
+  { repo: "shorepine/amy",              number: 950,  type: "pr",    state: "closed", date: "2026-07-20", title: "Use full-precision multiply for biquad feedback coefficients" },
+  { repo: "shorepine/amy",              number: 893,  type: "pr",    state: "merged", date: "2026-07-15", title: "Inline PIE asm in algorithms.c zero()/copy()" },
+  { repo: "shorepine/amy",              number: 881,  type: "pr",    state: "merged", date: "2026-07-12", title: "Keep soft-float libcalls out of the render path" },
+  { repo: "shorepine/amy",              number: 827,  type: "pr",    state: "merged", date: "2026-07-07", title: "amy_sysclock(): fix clock wrap at ~25 h and precision decay" },
+  { repo: "shorepine/amy",              number: 787,  type: "pr",    state: "closed", date: "2026-07-03", title: "Fix stereo_reverb LPF state never being written back" },
+  { repo: "shorepine/amy",              number: 783,  type: "issue", state: "closed", date: "2026-06-30", title: "Other hot-path exp2f/cosf/sinf call sites" },
+  { repo: "shorepine/amy",              number: 743,  type: "pr",    state: "merged", date: "2026-06-20", title: "Fix NULL deref on freed chained_osc in render_osc_wave" },
+  { repo: "shorepine/amy",              number: 625,  type: "issue", state: "closed", date: "2026-03-22", title: "ESP-IDF: AMY crashes at boot - ESP_TASK_PRIO_MAX is invalid as a FreeRTOS task priority" },
 ];
 
 const OSS_CACHE_KEY = "oss-contributions-v1";
@@ -143,8 +149,8 @@ function useContributions() {
       })
       .catch(() => {
         if (!alive) return;
-        setItems(OSS_FALLBACK);
-        setSource("snapshot");
+        setItems(OSS_CURATED);
+        setSource("curated");
       });
     return () => { alive = false; };
   }, []);
@@ -233,7 +239,7 @@ function OpenSource() {
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--ink-3)", letterSpacing: "0.04em", margin: "0 0 24px" }}>
               {source === "loading" && "querying api.github.com …"}
               {source === "live" && `live from GitHub · ${merged} merged · ${issues} issues · ${repos.join(" · ")}`}
-              {source === "snapshot" && `offline snapshot · ${merged} merged · ${issues} issues · ${repos.join(" · ")}`}
+              {source === "curated" && `curated selection · ${items.length} highlights · ${repos.join(" · ")}`}
             </p>
             <button
               className="oss-collapse"
@@ -242,7 +248,7 @@ function OpenSource() {
               onClick={() => setCollapsed((c) => !c)}
             >
               {collapsed
-                ? `▸ show ${items ? `all ${items.length} ` : ""}contributions`
+                ? `▸ show ${items ? `${source === "curated" ? "" : "all "}${items.length} ` : ""}contributions`
                 : "▾ collapse section"}
             </button>
           </Reveal>
@@ -262,6 +268,21 @@ function OpenSource() {
               ))}
             </div>
           </Reveal>
+          {source === "curated" && (
+            <Reveal delay={150}>
+              <p className="oss-curated-note">
+                GitHub's API didn't answer, so this is a hand-picked selection rather than
+                the full contribution history -{" "}
+                <a
+                  href={`https://github.com/search?q=${encodeURIComponent(buildQuery())}&type=issues`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  see everything on GitHub ↗
+                </a>
+              </p>
+            </Reveal>
+          )}
           <div className="oss-list">
             {items === null && (
               <div className="oss-empty">- loading contributions -</div>
