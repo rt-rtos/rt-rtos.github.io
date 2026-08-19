@@ -236,6 +236,9 @@ function OpenSource() {
             <p style={{ fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--ink-2)", maxWidth: "60ch", margin: "0 0 8px", textWrap: "pretty" }}>
               Upstream contributions - mostly to <a href="https://github.com/shorepine/amy" target="_blank" rel="noreferrer" style={{ borderBottom: "1px solid var(--rule)" }}>AMY</a>, the synthesis engine my handheld synth runs on.
             </p>
+            <p style={{ fontSize: "clamp(14px, 1.15vw, 16px)", color: "var(--ink-3)", maxWidth: "62ch", margin: "0 0 12px", textWrap: "pretty" }}>
+              Every contribution below went through review by AMY&rsquo;s maintainers, <a href="https://github.com/dpwe" target="_blank" rel="noreferrer" style={{ borderBottom: "1px solid var(--rule)" }}>Dan Ellis</a> and <a href="https://github.com/bwhitman" target="_blank" rel="noreferrer" style={{ borderBottom: "1px solid var(--rule)" }}>Brian Whitman</a>.
+            </p>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--ink-3)", letterSpacing: "0.04em", margin: "0 0 24px" }}>
               {source === "loading" && "querying api.github.com …"}
               {source === "live" && `live from GitHub · ${merged} merged · ${issues} issues · ${repos.join(" · ")}`}

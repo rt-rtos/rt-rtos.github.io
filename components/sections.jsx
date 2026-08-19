@@ -108,6 +108,12 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
       <div className="hero-sub">
         <Reveal delay={150} className="hero-intro">
           <p className="lede">{lede}</p>
+          <div className="hero-contrib">
+            <span className="hero-contrib-label">contributing to</span>
+            <a href="#oss">shorepine/amy</a>
+            <a href="#oss">hathach/tinyusb</a>
+            <a href="#oss">espressif/esp-iot-solution</a>
+          </div>
         </Reveal>
         <Reveal delay={300} className="hero-video-wrap">
           <figure className="hero-video-frame">
@@ -222,7 +228,16 @@ function About() {
              <p>I like getting my hands dirty with the hardware, trying to understand how things work at a fundamental level. </p>
              
              <p>I&rsquo;m currently focused on building a strong foundation in embedded systems, real-time programming and signal processing, while also exploring PCB design with the goal of developing complete insights and intuition for embedded systems.</p>
-         
+
+             <div className="about-aside">
+               <p>
+                 A lot of that learning happens upstream in <a href="https://github.com/shorepine/amy" target="_blank" rel="noreferrer">AMY</a>, the open-source synthesis engine my synth runs on -
+                 written and maintained by <a href="https://github.com/dpwe" target="_blank" rel="noreferrer">Dan Ellis</a> (research scientist at Google, ex-Columbia)
+                 and <a href="https://github.com/bwhitman" target="_blank" rel="noreferrer">Brian Whitman</a> (co-founder of The Echo Nest).
+               </p>
+               <p>The collaborative effort, appreciation, and most of all feedback/review in a project of that caliber has been the best learning experience I could ask for.</p>
+             </div>
+
           </Reveal>
           <Reveal delay={200}>
             <div className="about-card">
