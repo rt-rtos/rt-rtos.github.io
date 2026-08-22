@@ -222,7 +222,6 @@ function OpenSource() {
   const visible = showAll ? shown : shown.slice(0, LIST_LIMIT);
   const merged = (items || []).filter((it) => it.state === "merged").length;
   const issues = (items || []).filter((it) => it.type === "issue").length;
-  const repos = [...new Set((items || []).map((it) => it.repo))];
 
   return (
     <section className="section container" id="oss">
@@ -236,13 +235,15 @@ function OpenSource() {
             <p style={{ fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--ink-2)", maxWidth: "60ch", margin: "0 0 8px", textWrap: "pretty" }}>
               Upstream contributions - mostly to <a href="https://github.com/shorepine/amy" target="_blank" rel="noreferrer" style={{ borderBottom: "1px solid var(--rule)" }}>AMY</a>, the synthesis engine my handheld synth runs on.
             </p>
-            <p style={{ fontSize: "clamp(14px, 1.15vw, 16px)", color: "var(--ink-3)", maxWidth: "62ch", margin: "0 0 12px", textWrap: "pretty" }}>
-              Every contribution below went through review by AMY&rsquo;s maintainers, <a href="https://github.com/dpwe" target="_blank" rel="noreferrer" style={{ borderBottom: "1px solid var(--rule)" }}>Dan Ellis</a> and <a href="https://github.com/bwhitman" target="_blank" rel="noreferrer" style={{ borderBottom: "1px solid var(--rule)" }}>Brian Whitman</a>.
-            </p>
+            <div className="oss-repos">
+              <a href="https://github.com/shorepine/amy" target="_blank" rel="noreferrer">shorepine/amy</a>
+              <a href="https://github.com/hathach/tinyusb" target="_blank" rel="noreferrer">hathach/tinyusb</a>
+              <a href="https://github.com/espressif/esp-iot-solution" target="_blank" rel="noreferrer">espressif/esp-iot-solution</a>
+            </div>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--ink-3)", letterSpacing: "0.04em", margin: "0 0 24px" }}>
               {source === "loading" && "querying api.github.com …"}
-              {source === "live" && `live from GitHub · ${merged} merged · ${issues} issues · ${repos.join(" · ")}`}
-              {source === "curated" && `curated selection · ${items.length} highlights · ${repos.join(" · ")}`}
+              {source === "live" && `live from GitHub · ${merged} merged · ${issues} issues`}
+              {source === "curated" && `curated selection · ${items.length} highlights`}
             </p>
             <button
               className="oss-collapse"

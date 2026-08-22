@@ -1272,6 +1272,22 @@ a.project-run-link.project-featured-link .project-run-ext {
 }
 
 /* ============== Open Source ============== */
+.oss-repos {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 18px;
+  margin: 0 0 12px;
+}
+.oss-repos a {
+  color: var(--accent);
+  border-bottom: 1px solid color-mix(in oklab, var(--accent) 45%, transparent);
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease;
+}
+.oss-repos a:hover { border-bottom-color: var(--accent); }
 .oss-filters {
   display: flex;
   gap: 8px;
