@@ -792,6 +792,20 @@ function Projects() {
 const WRITING = [
   {
     date: "2026.08",
+    title: "Dreams of filthy, slapping 808s - Adding distortion to AMY",
+    tag: "DSP",
+    body: [
+      { t: "p", text: "AMY shipped with reverb, chorus, echo and EQ - no way to make anything dirty, and distortion felt like the expected synth-engine feature that was missing. So I started prototyping, listening and measuring - planning and designing its distortion subsystem: a soft clipper, a wavefolder and a bitcrusher, running per oscillator, per voice, or across a whole mix bus, with drive and mix modulatable from velocity, envelopes and LFOs. Fixed-point throughout, with the per-sample loops kept in the Xtensa zero-overhead form." },
+      { t: "p", text: "This was my first contribution large enough to need staging: a main PR, then a follow-up (now in review) adding stage stacking, modulation and the bus scope. The wire format was sized for that future from the start, so the extensions changed no message syntax. Each stage shipped with spectrogram demo clips, a documentation page, regression pins, and proof the library renders byte-identically to upstream with the feature off." },
+      { t: "p", text: "What stays with me is how little friction there was. The maintainers met the work with enthusiasm (\"The sounds are gorgeous!\"), reviewed fast, and green-lit the follow-ups - trust I hadn't expected for a feature this central. My takeaway: what earns that trust is lowering the cost of owning a contribution, not just reviewing it - the tests, the docs, the compatibility proofs." },
+      { t: "links", items: [
+        { href: "https://github.com/shorepine/amy/pull/1116", label: "#1116 - the distortion subsystem: soft clipper, wavefolder, bitcrusher (merged)" },
+        { href: "https://github.com/shorepine/amy/pull/1134", label: "#1134 - stage stacking, modulation and the bus scope (in review)" },
+      ]},
+    ],
+  },
+  {
+    date: "2026.08",
     title: "Debugging USB audio dropouts: from a WAV capture to two upstream PRs",
     tag: "Debugging",
     body: [
