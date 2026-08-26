@@ -50,6 +50,15 @@ function App() {
     };
   }, []);
 
+  // The browser resolves the URL fragment before React has rendered any
+  // section, so a direct link like /#oss lands at the top. Re-apply it once
+  // the tree is mounted; scroll-margin-top in styles.css keeps the offset.
+  useEffect(() => {
+    if (!window.location.hash) return;
+    const target = document.getElementById(window.location.hash.slice(1));
+    if (target) requestAnimationFrame(() => target.scrollIntoView());
+  }, []);
+
   useEffect(() => {
     const tick = () => {
       const d = new Date();
