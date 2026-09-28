@@ -57,10 +57,40 @@ function TopBar({ now }) {
 }
 
 /* ====== Hero ====== */
+/* Hero player clips, in play order. Each advances to the next when it ends;
+   "contain" fits the vertical phone clips inside the 4:3 frame. */
+const HERO_CLIPS = [
+  { src: "assets/Amysynth/genre-templates.mp4", poster: "assets/Amysynth/genre-templates.jpg",
+    name: "Genre templates", fit: "contain", label: "S3-Amysynth genre templates demo video" },
+  { src: "assets/Amysynth/bounce-demo.mp4", poster: "assets/Amysynth/bounce-demo.jpg",
+    name: "Bounce to clip", fit: "contain", label: "S3-Amysynth bounce-to-clip demo video" },
+  { src: "assets/amybox.mp4", poster: "assets/Amysynth/1.jpg",
+    name: "Old demo · earlier build", fit: "cover",
+    label: "Older S3-Amysynth demo video, recorded on an earlier build" },
+];
+
 function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
   const [isMuted, setIsMuted] = useState(true);
   const [volume, setVolume] = useState(0.72);
+  const [clipIdx, setClipIdx] = useState(0);
   const videoRef = useRef(null);
+  const clip = HERO_CLIPS[clipIdx];
+  const firstClipRender = useRef(true);
+
+  /* A new source plays from the start with the current mute and volume; the
+     first clip is left to the autoplay attribute. */
+  useEffect(() => {
+    if (firstClipRender.current) { firstClipRender.current = false; return; }
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = isMuted;
+    v.volume = volume;
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  }, [clipIdx]);
+
+  const stepClip = (dir) =>
+    setClipIdx((i) => (i + dir + HERO_CLIPS.length) % HERO_CLIPS.length);
 
   const handleToggleMute = () => {
     const nextMuted = !isMuted;
@@ -117,29 +147,38 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
         </Reveal>
         <Reveal delay={300} className="hero-video-wrap">
           <figure className="hero-video-frame">
-            <div className="hero-video-bar" aria-hidden="true">
-              <span className="hero-video-bar-dots"><span></span><span></span><span></span></span>
-              <span className="hero-video-bar-label">amybox.mp4</span>
+            <div className="hero-video-bar">
+              <span className="hero-video-bar-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <div className="hero-video-nav">
+                <button type="button" className="hero-video-step" onClick={() => stepClip(-1)} aria-label="Previous clip">‹</button>
+                <span className="hero-video-bar-label" aria-live="polite">
+                  {clipIdx + 1}/{HERO_CLIPS.length} · {clip.name}
+                </span>
+                <button type="button" className="hero-video-step" onClick={() => stepClip(1)} aria-label="Next clip">›</button>
+              </div>
             </div>
             <div className="hero-video-wrapper">
               <video
                 ref={videoRef}
-                className="hero-video"
+                className={`hero-video${clip.fit === "contain" ? " is-contain" : ""}`}
+                src={clip.src}
                 autoPlay
                 muted={isMuted}
-                loop
                 playsInline
                 preload="metadata"
-                poster="assets/Amysynth/1.jpg"
-                aria-label="S3-Amysynth handheld synthesizer demo video"
+                poster={clip.poster}
+                aria-label={clip.label}
+                onEnded={() => stepClip(1)}
               >
-                <source src="assets/amybox.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-              <div className="hero-video-overlay" aria-hidden="true">
-                <span className="hero-video-overlay-dot"></span>
-                Now playing - S3-Amysynth · ESP32-S3 · FreeRTOS · AMY engine · 48 kHz stereo · USB Audio 2.0
-              </div>
+              {/* The vertical clips carry burned-in captions where this sits. */}
+              {clip.fit === "cover" && (
+                <div className="hero-video-overlay" aria-hidden="true">
+                  <span className="hero-video-overlay-dot"></span>
+                  Now playing - S3-Amysynth · ESP32-S3 · FreeRTOS · AMY engine · 48 kHz stereo · USB Audio 2.0
+                </div>
+              )}
             </div>
             <figcaption className="hero-video-caption">S3-Amysynth · ESP32-S3 · groovebox · real-time synthesis</figcaption>
             <div className="hero-video-controls">
