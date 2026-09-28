@@ -207,6 +207,7 @@ section[id] { scroll-margin-top: 76px; }
   align-items: center;
   gap: 8px;
   font-weight: 500;
+  white-space: nowrap;
 }
 .topbar .mark .glyph {
   width: 14px; height: 14px;
@@ -244,15 +245,50 @@ section[id] { scroll-margin-top: 76px; }
 }
 .topbar .clock { color: var(--ink-3); }
 .topbar .nav, .topbar .status { white-space: nowrap; }
-/* Middle widths: shed the clock, then the date, so the nav never collides with the status */
+.snippets {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.snippets-toggle,
+.snippets-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink-3);
+  border: 1px solid var(--rule);
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.snippets-next { padding: 4px 7px; font-size: 13px; }
+.snippets-toggle:hover, .snippets-toggle:focus-visible,
+.snippets-next:hover, .snippets-next:focus-visible,
+.snippets[data-playing="true"] .snippets-toggle {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+@media (max-width: 1200px) {
+  .snippets-bpm { display: none; }
+}
 @media (min-width: 721px) and (max-width: 1000px) {
+  .snippets-label { display: none; }
+}
+/* Narrower widths shed the clock, then the date, so the nav never collides
+   with the snippets widget and the status */
+@media (max-width: 1200px) {
   .topbar .clock { display: none; }
 }
-@media (min-width: 721px) and (max-width: 880px) {
+@media (max-width: 1000px) {
   .topbar .status-date { display: none; }
 }
 @media (max-width: 720px) {
   .topbar .nav { display: none; }
+}
+@media (max-width: 480px) {
+  .snippets-label { display: none; }
+  .topbar .right { gap: 10px; }
 }
 
 /* ============== Hero ============== */

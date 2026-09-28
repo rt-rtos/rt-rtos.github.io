@@ -27,6 +27,102 @@ function Reveal({ children, delay = 0, as: Tag = "div", className = "", ...rest 
   );
 }
 
+/* ====== Audio demo snippets ======
+   Loops rendered from the S3-Amysynth genre templates, then the full ACID
+   CIRCUIT demo. Nothing loads until play; after that it runs through the
+   list and wraps. Only one page audio source at a time: starting either
+   this or the hero video's sound sends "rt-audio" and the other stops. */
+const AUDIO_SNIPPETS = [
+  { file: "01-ambient.m4a", name: "Ambient", note: "70 BPM" },
+  { file: "02-boom-bap.m4a", name: "Boom bap", note: "90 BPM" },
+  { file: "03-synthwave.m4a", name: "Synthwave", note: "100 BPM" },
+  { file: "04-dub-techno.m4a", name: "Dub techno", note: "120 BPM" },
+  { file: "05-house.m4a", name: "House", note: "124 BPM" },
+  { file: "06-electro.m4a", name: "Electro", note: "128 BPM" },
+  { file: "07-techno.m4a", name: "Techno", note: "132 BPM" },
+  { file: "08-trap.m4a", name: "Trap", note: "140 BPM" },
+  { file: "09-drum-n-bass.m4a", name: "Drum n bass", note: "174 BPM" },
+  { file: "10-acid-circuit.m4a", name: "Acid Circuit", note: "full demo · 128 BPM" },
+];
+
+const announceAudio = (source) =>
+  window.dispatchEvent(new CustomEvent("rt-audio", { detail: { source } }));
+
+function AudioSnippets() {
+  const [idx, setIdx] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef(null);
+  const snip = AUDIO_SNIPPETS[idx];
+
+  useEffect(() => {
+    const onOther = (e) => {
+      if (e.detail.source !== "snippets" && audioRef.current) audioRef.current.pause();
+    };
+    window.addEventListener("rt-audio", onOther);
+    return () => window.removeEventListener("rt-audio", onOther);
+  }, []);
+
+  /* A new source starts where the old one left off: playing or not. */
+  useEffect(() => {
+    const a = audioRef.current;
+    if (a && playing) {
+      const p = a.play();
+      if (p && p.catch) p.catch(() => setPlaying(false));
+    }
+  }, [idx]);
+
+  const toggle = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) {
+      announceAudio("snippets");
+      const p = a.play();
+      if (p && p.catch) p.catch(() => setPlaying(false));
+    } else {
+      a.pause();
+    }
+  };
+  const next = () => setIdx((i) => (i + 1) % AUDIO_SNIPPETS.length);
+
+  return (
+    <div className="snippets" data-playing={playing}>
+      <button
+        type="button"
+        className="snippets-toggle"
+        onClick={toggle}
+        aria-label={playing ? "Pause audio demo snippets" : "Play audio demo snippets"}
+        title="Audio demo snippets: short loops from S3-Amysynth's genre templates, then the full Acid Circuit demo"
+      >
+        {playing ? (
+          <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <rect x="1.5" y="1" width="2.4" height="8" fill="currentColor"/>
+            <rect x="6.1" y="1" width="2.4" height="8" fill="currentColor"/>
+          </svg>
+        ) : (
+          <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 1l7 4-7 4z" fill="currentColor"/>
+          </svg>
+        )}
+        <span className="snippets-label" aria-live="polite">
+          {playing ? snip.name : "audio demo snippets"}
+          {playing && <span className="snippets-bpm"> · {snip.note}</span>}
+        </span>
+      </button>
+      {playing && (
+        <button type="button" className="snippets-next" onClick={next} aria-label="Next audio snippet">›</button>
+      )}
+      <audio
+        ref={audioRef}
+        src={`assets/Amysynth/audio/${snip.file}`}
+        preload="none"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onEnded={() => { setPlaying(true); next(); }}
+      />
+    </div>
+  );
+}
+
 /* ====== Top bar ====== */
 function TopBar({ now }) {
   return (
@@ -46,6 +142,7 @@ function TopBar({ now }) {
         </nav>
       </div>
       <div className="right">
+        <AudioSnippets />
         <span className="status">
           <span className="dot" aria-hidden="true"></span>
           <span>available<span className="status-date"> · Sep 28</span></span>
@@ -89,12 +186,23 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
     if (p && p.catch) p.catch(() => {});
   }, [clipIdx]);
 
+  useEffect(() => {
+    const onOther = (e) => {
+      if (e.detail.source === "hero") return;
+      setIsMuted(true);
+      if (videoRef.current) videoRef.current.muted = true;
+    };
+    window.addEventListener("rt-audio", onOther);
+    return () => window.removeEventListener("rt-audio", onOther);
+  }, []);
+
   const stepClip = (dir) =>
     setClipIdx((i) => (i + dir + HERO_CLIPS.length) % HERO_CLIPS.length);
 
   const handleToggleMute = () => {
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
+    if (!nextMuted) announceAudio("hero");
     if (videoRef.current) {
       videoRef.current.muted = nextMuted;
       if (!nextMuted) {
@@ -109,6 +217,7 @@ function Hero({ heroLineA, heroLineB, heroAccent, heroLineC, lede }) {
     if (videoRef.current) {
       videoRef.current.volume = nextVolume;
       const shouldMute = nextVolume === 0;
+      if (!shouldMute && isMuted) announceAudio("hero");
       videoRef.current.muted = shouldMute;
       setIsMuted(shouldMute);
     }
