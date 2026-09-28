@@ -432,9 +432,10 @@ const PROJECTS = [
     tags: ["ESP32-S3", "Audio", "AMY", "FreeRTOS", "I2S", "USB-Audio", "GrooveBox"],
     href: "https://github.com/rt-rtos/S3-Amysynth",
     schema: "amysynth",
-    thumbnail: "assets/Amysynth/1.jpg",
+    thumbnail: "assets/Amysynth/device-thumb.jpg",
     images: [
-      { src: "assets/Amysynth/1.jpg", alt: "Amysynth - hardware prototype running the drum sequencer on perfboard" },
+      { src: "assets/Amysynth/device-close.jpg", alt: "Current build: hand-wired on perfboard, arranged for playing" },
+      { src: "assets/Amysynth/1.jpg", alt: "Earlier prototype running the drum sequencer on perfboard" },
     ],
   },
   {
